@@ -1,7 +1,5 @@
-UI: shadcn-ui
-  Documentations: https://ui.shadcn.com/docs
-
-
+UI: shadcn-ui\
+Documentations: https://ui.shadcn.com/docs
 
 ```
 Folder Structure:
