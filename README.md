@@ -1,4 +1,10 @@
-Architecture:
+UI: shadcn-ui
+  Documentations: https://ui.shadcn.com/docs
+
+
+
+```
+Folder Structure:
 │   ├── api/             # For API calls
 │   │   ├── problemsApi.ts
 │   ├── components/      # For reusable UI components
@@ -16,3 +22,4 @@ Architecture:
 │   ├── styles/          # For CSS and styles but minimizing css would be less painfull
 │   │   ├── index.css
 │   ├── lib/           # For schdn-ui
+```
