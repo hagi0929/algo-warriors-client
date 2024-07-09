@@ -33,16 +33,15 @@ const problems: Problem[] = [
 
 const HomePage = (props: Props) => {
     return (
-        <>
-            <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
-                <div className="col-span-3">
-                    <ProblemCard problems={problems}/>
-                </div>
-                <div className="col-span-2">
-                <ContestCard contests={problems}/>
-                </div>
+        <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
+            <div className="col-span-3">
+                <ProblemCard problems={problems}/>
             </div>
-        </>
+            <div className="col-span-2">
+                <ContestCard contests={problems}/>
+            </div>
+        </div>
+    
     )
 }
 

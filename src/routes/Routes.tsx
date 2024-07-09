@@ -3,6 +3,7 @@ import App from "../App";
 import HomePage from "../pages/Homepage";
 import ProblemPage from "../pages/ProblemPage";
 import ContestPage from "../pages/ContestPage";
+import DiscussionPage from "../pages/DiscussionPage";
 
 export const router = createBrowserRouter ([
     {
@@ -11,7 +12,8 @@ export const router = createBrowserRouter ([
         children: [
             {path: "", element: <HomePage/>},
             {path: "problem/:problem_id", element: <ProblemPage/>},
-            {path: "contest/:contest_id", element: <ContestPage/>}
+            {path: "contest/:contest_id", element: <ContestPage/>},
+            {path: "discussion/:discussion_id", element: <DiscussionPage/>}
         ]
     }
 ])
