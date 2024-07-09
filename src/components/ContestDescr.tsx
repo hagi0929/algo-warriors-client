@@ -5,7 +5,7 @@ interface ContestDescrProps {}
 const ContestDescr: React.FC<ContestDescrProps> = () => {
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
-            <h2 className="text-xl font-bold mb-4">What is this problem about?</h2>
+            <h2 className="text-xl font-bold mb-4">What is this contest about?</h2>
             <p className="text-gray-700">
                 {`Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima, voluptates. Dolore pariatur cum alias voluptatibus deleniti suscipit rerum ad et eveniet quos maiores cupiditate laudantium, a sit esse sequi quaerat?
                 Deserunt neque delectus cupiditate, nobis minima illo aspernatur atque sint, eveniet hic quod optio ab dolore, reprehenderit facilis! Id natus repellat dolores ipsa doloremque earum error eligendi beatae ratione nam.
