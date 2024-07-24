@@ -1,8 +1,5 @@
-import React from 'react'
 import DiscussionThread from '../components/DiscussionThread';
 import Navbar from '../components/Navbar';
-
-interface Props {}
 
 interface Discussion {
     id: number;
@@ -18,9 +15,10 @@ const discussions: Discussion[] = [
   { id: 4, content: 'This is a reply to the first reply.', parent_id: 2 },
   { id: 5, content: 'This is a reply to the reply of the first reply.', parent_id: 4 },
   { id: 6, content: 'This is another reply to the first reply.', parent_id: 2 },
+  { id: 7, content: 'This is a reply to another reply to the main discussion.', parent_id: 3 },
   ];
 
-const DiscussionPage = (props: Props) => {
+const DiscussionPage = () => {
   return (
     <>
     <Navbar />

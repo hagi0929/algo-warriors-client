@@ -1,8 +1,8 @@
-import React from 'react';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
-import {
-  ReplyIcon
-} from "lucide-react";
+import React, { useState } from 'react';
+import { Accordion, AccordionItem, AccordionContent } from './ui/accordion';
+import { MessageSquare } from 'lucide-react';
+import ReplyForm from './ReplyForm';
+import DiscussionItem from './DiscussItem';
 
 interface Discussion {
   id: number;
@@ -15,47 +15,41 @@ interface DiscussionProps {
   discussions: Discussion[];
 }
 
-const getReplies = (discussions: Discussion[], parentId: number): Discussion[] => {
-  return discussions.filter(discussion => discussion.parent_id === parentId);
-};
-
-const DiscussionItem: React.FC<{ discussion: Discussion; discussions: Discussion[] }> = ({ discussion, discussions }) => {
-  const replies = getReplies(discussions, discussion.id);
-
-  return (
-    <div className="pl-4">
-      {replies.length > 0 && (
-        <Accordion type="multiple">
-            {replies.map(reply => (
-                <div key={reply.id}>
-                  {getReplies(discussions, reply.id).length > 0 ? (
-                    <Accordion type="multiple">
-                      <AccordionItem value={String(reply.id)}>
-                        <AccordionTrigger>{reply.content}</AccordionTrigger>
-                        <AccordionContent className="border-x-2 border-slate-300 text-base">
-                          <DiscussionItem discussion={reply} discussions={discussions} />
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  ) : (
-                    <AccordionContent >
-                        <div className="pl-0 pt-3">{reply.content}</div>
-                    </AccordionContent>
-                  )}
-                </div>
-            ))}
-        </Accordion>
-      )}
-    </div>
-  );
-};
-
-const DiscussionThread: React.FC<DiscussionProps> = ({ discussions }) => {
-  const mainDiscussion = discussions.find(discussion => discussion.parent_id === null);
+const DiscussionThread: React.FC<DiscussionProps> = ({ discussions: initialDiscussions }) => {
+  const [discussions, setDiscussions] = useState<Discussion[]>(initialDiscussions);
+  const [isReplying, setIsReplying] = useState(false);
+  const mainDiscussion = initialDiscussions.find(discussion => discussion.parent_id === null);
   if (!mainDiscussion) {
     return <div>No main discussion found</div>;
   }
-  const replies = getReplies(discussions, mainDiscussion.id);
+  
+  const addDiscussion = (content: string, parentId: number) => {
+    const newId = discussions.length > 0 ? (Math.max(...discussions.map(d => d.id)) + 1) : 1;
+    const newDiscussion: Discussion = {
+      id: newId,
+      content,
+      parent_id: parentId,
+      title: undefined
+    };
+    console.log(newDiscussion)
+    setDiscussions([...discussions, newDiscussion]);
+  };
+
+
+  const handleReplyClick = () => {
+    setIsReplying(!isReplying);
+  };
+  
+  const handleReplySubmit = (replyText: string, parentId: number) => {
+    console.log(`Reply submitted for discussion ID ${parentId}: ${replyText}`);
+    addDiscussion(replyText, mainDiscussion.id);
+    setIsReplying(false);
+  };
+  
+  const handleReplyCancel = () => {
+    setIsReplying(false);
+  };
+
 
   return (
     <div className="">
@@ -67,31 +61,26 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ discussions }) => {
         <AccordionContent className="pl-4 w-full border-x-2 border-slate-300 ">
           <div className="pt-3 text-lg">
             {mainDiscussion.content}
+            <div className="reply pl-2">
+              {!isReplying && (
+                <button
+                  onClick={() => handleReplyClick()}
+                  className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Reply</span>
+                </button>
+                )}
+              {isReplying && (
+                <ReplyForm
+                  discussionId={mainDiscussion.id}
+                  onSubmit={handleReplySubmit}
+                  onCancel={handleReplyCancel}
+                />
+              )}
+            </div>
           </div>
-          <div >
-            {replies.length > 0 && (
-              <div>
-                {replies.map(reply => (
-                  <div key={reply.id}>
-                    {getReplies(discussions, reply.id).length > 0 ? (
-                      <Accordion type="multiple">
-                        <AccordionItem value={String(reply.id)}>
-                          <AccordionTrigger>{reply.content}</AccordionTrigger>
-                          <AccordionContent className="border-x-2 border-slate-300 text-base">
-                            <DiscussionItem discussion={reply} discussions={discussions} />
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    ) : (
-                      <AccordionContent>
-                          <div className="pl-0 pt-6">{reply.content}</div>
-                      </AccordionContent>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <DiscussionItem discussion={mainDiscussion} discussions={discussions} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -100,3 +89,4 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ discussions }) => {
 };
 
 export default DiscussionThread;
+
