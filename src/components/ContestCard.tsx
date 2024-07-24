@@ -28,7 +28,6 @@ import { Contest } from "../models/Contest";
 import { useEffect, useState } from "react";
 import { fetchContests } from "../api/contestApi";
 import { Button } from "./ui/button";
-import { useNavigate } from 'react-router-dom';
 
 const ContestCard: React.FC = () => {
   const [personalContests, setPersonalContests] = useState<Contest[]>([]);
@@ -61,7 +60,6 @@ const ContestCard: React.FC = () => {
   };
 
   const renderPageNumbers = () => {
-    const navigate = useNavigate();
     const pageNumbers = [];
     const maxPagesToShow = 3;
     const startPage = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
