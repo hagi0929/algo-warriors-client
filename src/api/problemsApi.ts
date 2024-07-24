@@ -13,13 +13,19 @@ export const fetchProblems = async (): Promise<Problem[]> => {
       throw new Error(`Expected application/json but received ${contentType}`);
     }
 
-    const data = await response.json();
+    const data = await response.json(); // Parse JSON only once
     
     // Log the data to ensure it's correctly parsed
     console.log('Fetched problems:', data);
-    
-    
-    return response.json();
+    var res: Problem[] = [];
+    for(let i=0; i<data.length; i++) {
+      res.push({
+        id: data[i].problem_id,
+        title: data[i].title,
+        description: data[i].description
+      });
+    }
+    return res; // Return parsed data
   } catch (error) {
     console.error('Fetch problems failed:', error);
     throw error;
