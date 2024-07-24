@@ -37,7 +37,7 @@ const Navbar = (props: Props) => {
       <NavigationMenu.List className="w-full flex items-center justify-between shadow-blackA4 m-0 list-none rounded-[6px] bg-gray p-1 shadow-[0_2px_10px]">
         <div className="flex items-center">
         <NavigationMenu.Item className='z-40'>
-            <Link to="/" className="text-violet11 hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[20px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px] content-center">
+            <Link to="/home" className="text-violet11 hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[20px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px] content-center">
                 AlgoWarrior
             </Link>
         </NavigationMenu.Item>
@@ -80,7 +80,7 @@ const Navbar = (props: Props) => {
         <NavigationMenu.Item className="ml-auto">
           <NavigationMenu.Link
             className="text-violet11 hover:bg-violet3 focus:shadow-violet7 flex justify-right select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px] content-center"
-            href=""
+            href="home"
           >
             <HoverCardDemo />
           </NavigationMenu.Link>

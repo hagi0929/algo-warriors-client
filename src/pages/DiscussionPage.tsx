@@ -1,28 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import DiscussionThread from '../components/DiscussionThread';
+import Navbar from '../components/Navbar';
+import { Discussion } from '../models/Discussion';
+import { fetchDiscussionsById } from '../api/discussionProblemApi';
 
-interface Props {}
+const DiscussionPage = () => {
+    const { discussionId } = useParams<{ discussionId: string }>();
+    const [discussion, setDiscussion] = useState<Discussion | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-interface Discussion {
-    id: number;
-    content: string;
-    parent_id: number | null;
-    title?: string;
-  }
+    useEffect(() => {
+        if (!discussionId) {
+            setError('Discussion ID not provided');
+            setLoading(false);
+            return;
+        }
+        fetchDiscussionsById(Number(discussionId))
+            .then((data) => {
+                setDiscussion(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, [discussionId]);
 
-const discussions: Discussion[] = [
-    { id: 1, content: 'This is the main discussion.', parent_id: null, title: 'Main Discussion' },
-  { id: 2, content: 'This is a reply to the main discussion.', parent_id: 1 },
-  { id: 3, content: 'This is another reply to the main discussion.', parent_id: 1 },
-  { id: 4, content: 'This is a reply to the first reply.', parent_id: 2 },
-  { id: 5, content: 'This is a reply to the reply of the first reply.', parent_id: 4 },
-  { id: 6, content: 'This is another reply to the first reply.', parent_id: 2 },
-  ];
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!discussion) return <div>No discussion found</div>;
 
-const DiscussionPage = (props: Props) => {
-  return (
-    <DiscussionThread discussions={discussions} />
-  )
-}
+    return (
+        <>
+            <Navbar />
+            <DiscussionThread mainDiscussion={discussion} />
+        </>
+    );
+};
 
-export default DiscussionPage
+export default DiscussionPage;
