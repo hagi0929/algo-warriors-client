@@ -37,14 +37,10 @@ export const fetchDiscussionsById = async (discussionId: number): Promise<Discus
             throw new Error(`Expected JSON but received ${contentType}`);
         }
 
-        const data: Discussion[] = await response.json(); // Assuming the API returns an array of discussions
+        const data: Discussion = await response.json();
         console.log('Fetched discussions data:', data);
 
-        if (data.length === 0) {
-            throw new Error('No discussions found');
-        }
-
-        return data[0]; // Return the first result from the array
+        return data;
     } catch (error) {
         console.error('Fetch discussions failed:', error);
         throw error;
