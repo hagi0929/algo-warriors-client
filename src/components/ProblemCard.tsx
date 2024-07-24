@@ -45,7 +45,6 @@ interface ProblemCardProps {
 interface Problem {
     id: number;
     title: string;
-    description: string;
   }
 
 interface DropDownForm {
@@ -179,11 +178,7 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">{p.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge className="text-xs" variant="secondary">
-                      {p.description}
-                    </Badge>
-                  </TableCell>
+                  
                 </Link>
               </TableRow>
             ))}
