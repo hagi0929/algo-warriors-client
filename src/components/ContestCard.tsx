@@ -30,62 +30,72 @@ import {
 } from "./ui/alert"
 import { Terminal } from "lucide-react"
 import { Link } from 'react-router-dom';
+import { Contest } from "../models/Contest"
+import { useEffect, useState } from "react"
+import { fetchContests } from "../api/contestApi"
+import { Button } from "./ui/button"
+
+const ContestCard: React.FC = () => {
+  const [contests, setContests] = useState<Contest[]>([]);
+  useEffect(() => {
+    const fetchAndSetContests = async () => {
+      try {
+        const data = await fetchContests();
+        setContests(data);
+      } catch (err) {
+        console.error("Failed to fetch contests:", err);
+      }
+    };
   
-
-interface ContestCardProps {
-  contests: Contest[];
-}
-
-interface Contest {
-    id: number;
-    title: string;
-    description: string;
-  }
-
-const ContestCard: React.FC<ContestCardProps> = ({ contests }) => {
+    fetchAndSetContests();
+  }, []);      
+  
     return (
         <>
-        <Card className="contest-card">
+       <Card className="contest-card">
         <CardHeader className="px-7">
-            <CardTitle>Contests</CardTitle>
-            <CardDescription>Try attempting a contest to better your coding skills!</CardDescription>
+          <CardTitle>Contests</CardTitle>
+          <CardDescription>Try attempting a contest to better your coding skills!</CardDescription>
         </CardHeader>
         <CardContent>
-        <Alert>
+          <Alert>
             <Terminal className="h-4 w-4" />
             <AlertTitle>Current Contest Achievements:</AlertTitle>
             <AlertDescription>
-                You have ___ this many wins!
+              You have ___ this many wins!
             </AlertDescription>
-        </Alert>
-            <Table>
+          </Alert>
+          <Table>
             <TableHeader>
-                <TableRow className="pt-6 flex space-around">
-                <TableHead></TableHead>
-                <TableHead className="hidden sm:table-cell">Title</TableHead>
-                <TableHead className="hidden sm:table-cell">Description</TableHead>
-                </TableRow>
+              <TableRow className="pt-6 flex space-around text-sm pb-2">
+                Click on a Contest for more information! Or click Register to join!
+              </TableRow>
             </TableHeader>
             <TableBody>
-            {contests.map(c => (
-              <TableRow key={c.id} className="bg-accent hover:bg-hover-accent">
-                <Link to={`/contest/${c.id}`} className="flex w-full">
-                  <TableCell>
-                    <div className="hidden text-sm text-muted-foreground md:inline">
-                      {c.id}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">{c.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge className="text-xs" variant="secondary">
-                      {c.description}
-                    </Badge>
-                  </TableCell>
-                </Link>
-              </TableRow>
-            ))}
+              {contests.map(c => (
+                <TableRow key={c.id} className="bg-accent hover:bg-hover-accent">
+                  <Link to={`/contest/${c.id}`} className="flex w-full">
+                    <TableCell className="hidden sm:table-cell w-4/5">
+                      <Badge className="text-xs" variant="secondary">
+                        {c.title}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell w-1/5 justify-end">
+                      <Button
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          console.log('Register button clicked');
+                        }}
+                        className="bg-slate-500 text-white"
+                      >
+                        Register
+                      </Button>
+                    </TableCell>
+                  </Link>
+                </TableRow>
+              ))}
             </TableBody>
-            </Table>
+          </Table>
         </CardContent>
         <Pagination>
           <PaginationContent>
