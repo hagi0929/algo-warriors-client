@@ -3,8 +3,12 @@ import { Card, CardContent } from './ui/card';
 import Editor from '@monaco-editor/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { useCodeSubmission } from '../hooks/useCodeSubmission';
 
-interface Props {}
+
+interface Props {
+  problemId: string;
+}
 
 const languageIdMapping: { [key: string]: number } = {
   javascript: 63, // JavaScript (Node.js 12.14.0)
@@ -40,7 +44,7 @@ const getDefaultCode = (language:any) => {
   }
 };
 
-const CodeEditor = (props: Props) => {
+const CodeEditor : React.FC<Props> = ({ problemId }) => {
   const editorRef = useRef(null);
   const [language, setLanguage] = useState('javascript');
 
@@ -55,13 +59,16 @@ const CodeEditor = (props: Props) => {
   const handleSubmit = () => {
     if (editorRef.current) {
       const code = (editorRef.current as any)?.getValue();
-      var formattedCode = code.trim();
+      var formattedCode:string = code.trim();
       formattedCode = formattedCode.split('\n').map((line: string) => line.trim()).join('\\n');
       const languageId = languageIdMapping[language];
 
       console.log('Code:', formattedCode);
       console.log('Language:', languageId);
-      //TODO: Submit code to the backend
+      const { data: result, error, isLoading } = useCodeSubmission(languageId, formattedCode, Number(problemId));
+
+      if (isLoading) return <div>Loading...</div>;
+      if (error) return <div>Error testing code: {error.message}</div>;
     }
   };
 

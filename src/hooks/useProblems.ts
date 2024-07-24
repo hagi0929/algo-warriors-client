@@ -12,7 +12,7 @@ export const useProblems = () => {
 
 export const useProblemDescription = (id:string) => {
   return useQuery<Problem[], Error>({
-    queryKey: ['problems'],
+    queryKey: ['problem_description'],
     queryFn: () => fetchProblemDescription(id),
   });
 };
