@@ -37,16 +37,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import { ProblemTable } from "./ProblemTable"
+import { ColumnDef } from "@tanstack/react-table"
 
 interface ProblemCardProps {
   problems: Problem[];
 }
 
 interface Problem {
-    id: number;
-    title: string;
-    description: string;
-  }
+  problem_id: number;
+  title: string;
+  difficulty: string;
+  tags: string[];
+}
 
 interface DropDownForm {
   value: string;
@@ -88,13 +91,29 @@ const types: DropDownForm[] = [
 ]
 
 
+// define interfave for filter
+interface ProblemFilterOptions {
+  title: string | null;
+  difficulty: string | null;
+  categories: string[] | null;
+  contestId: number | null;
+  sortBy: string | null;
+}
+
+
 const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
   const [posDifficulty, setPosDifficulty] = useState(difficulties[0].value)
   const [curDifficulty, setCurDifficulty] = useState("")
 
   const [posType, setPosType] = useState(types[0].value)
   const [curType, setCurType] = useState("")
-
+  const [filters, setFilters] = useState<ProblemFilterOptions>({
+    title: null,
+    difficulty: null,
+    categories: null,
+    contestId: null,
+    sortBy: null,
+  })
   const handleDifficultyChange = (value: string) => {
     setPosDifficulty(value);
     setCurDifficulty(value);
@@ -110,85 +129,58 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
     : 'Difficulty';
 
   const curTypeLabel = curType != ""
-  ? types.find(type => type.value === curType)?.label
-  : 'Category';
+    ? types.find(type => type.value === curType)?.label
+    : 'Category';
 
 
-    return (
-        <>
-        <Card className="problem-card">
+  return (
+    <>
+      <Card className="problem-card">
         <CardHeader className="px-7">
-            <CardTitle>Problems</CardTitle>
-            <CardDescription>Try attempting a problem to better your coding skills!</CardDescription>
+          <CardTitle>Problems</CardTitle>
+          <CardDescription>Try attempting a problem to better your coding skills!</CardDescription>
         </CardHeader>
         <CardContent>
-
+    
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              {curDifficultyLabel}
-            </Button>
+              <Button variant="outline">
+                {curDifficultyLabel}
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Available Difficulties</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup value={posDifficulty} onValueChange={handleDifficultyChange}>
-              {difficulties.map(d => (
-                <DropdownMenuRadioItem key={d.value} value={d.value}>
-                  {d.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
+                {difficulties.map(d => (
+                  <DropdownMenuRadioItem key={d.value} value={d.value}>
+                    {d.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              {curTypeLabel}
-            </Button>
+              <Button variant="outline">
+                {curTypeLabel}
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup value={posType} onValueChange={handleTypeChange}>
-              {types.map(d => (
-                <DropdownMenuRadioItem key={d.value} value={d.value}>
-                  {d.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
+                {types.map(d => (
+                  <DropdownMenuRadioItem key={d.value} value={d.value}>
+                    {d.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
 
-            <Table>
-            <TableHeader>
-              <TableRow className="pt-6 flex space-around">
-                <TableHead></TableHead>
-                <TableHead className="hidden sm:table-cell">Title</TableHead>
-                <TableHead className="hidden sm:table-cell">Description</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-              {problems.map(p => (
-              <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
-                <Link to={`/problem/${p.id}`} className="flex w-full">
-                  <TableCell>
-                    <div className="hidden text-sm text-muted-foreground md:inline">
-                      {p.id}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">{p.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge className="text-xs" variant="secondary">
-                      {p.description}
-                    </Badge>
-                  </TableCell>
-                </Link>
-              </TableRow>
-            ))}
-            </TableBody>
-            </Table>
+          <ProblemTable data={problems} />
         </CardContent>
         <Pagination>
           <PaginationContent>
@@ -206,9 +198,9 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-        </Card>
-        </>
-    )
+      </Card>
+    </>
+  )
 }
 
 export default ProblemCard;

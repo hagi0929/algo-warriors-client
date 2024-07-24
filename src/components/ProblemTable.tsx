@@ -1,40 +1,119 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Badge } from './ui/badge';
-import { Problem } from '../models/Problem';
+"use client"
 
-interface ProblemTableProps {
-  problems: Problem[];
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table"
+import { useMemo, useState } from "react"
+import { Problem } from "../models/Problem"
+
+interface DataTableProps<Problem> {
+  data: Problem[]
 }
 
-const ProblemTable: React.FC<ProblemTableProps> = ({ problems }) => (
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead>Problem</TableHead>
-        <TableHead className="hidden sm:table-cell">Status</TableHead>
-        <TableHead className="hidden sm:table-cell">Date</TableHead>
-        <TableHead className="hidden md:table-cell">Value</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {problems.map((problem) => (
-        <TableRow key={problem.id}>
-          <TableCell>
-            <div className="font-medium">{problem.title}</div>
-            <div className="hidden text-sm text-muted-foreground md:inline">{problem.description}</div>
-          </TableCell>
-          <TableCell className="hidden sm:table-cell">
-            <Badge className="text-xs" variant={problem.status === 'Fulfilled' ? 'secondary' : 'outline'}>
-              {problem.status}
-            </Badge>
-          </TableCell>
-          <TableCell className="hidden sm:table-cell">{problem.date}</TableCell>
-          <TableCell className="text-right">${problem.value}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+export function ProblemTable<Problem>({
+  data,
+}: DataTableProps<Problem>) {
 
-export default ProblemTable;
+  const columns = useMemo<ColumnDef<Problem, any>[]>(
+    () => [
+      {
+        accessorKey: 'ID',
+        cell: info => info.getValue()
+      },
+      {
+        accessorKey: 'Title',
+        header: () => <span>Visits</span>,
+        meta: {
+          filterVariant: 'range',
+        },
+      },
+      {
+        accessorKey: 'Difficulty',
+        header: 'Status',
+        meta: {
+          filterVariant: 'select',
+        },
+      },
+      {
+        accessorKey: 'Tags',
+        meta: {
+          filterVariant: 'range',
+        },
+      },
+    ],
+    []
+  )
+
+  const table = useReactTable({
+    data,
+    columns,
+    enableRowSelection: true,
+    getCoreRowModel: getCoreRowModel(),
+  })
+  const [state, setState] = useState(table.initialState)
+
+  table.setOptions(prev => ({
+    ...prev,
+    state,
+    onStateChange: setState,
+  }))
+
+  return (
+    <div className="">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                )
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
