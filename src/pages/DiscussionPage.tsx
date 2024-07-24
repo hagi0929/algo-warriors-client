@@ -1,5 +1,6 @@
 import React from 'react'
 import DiscussionThread from '../components/DiscussionThread';
+import Navbar from '../components/Navbar';
 
 interface Props {}
 
@@ -21,7 +22,10 @@ const discussions: Discussion[] = [
 
 const DiscussionPage = (props: Props) => {
   return (
+    <>
+    <Navbar />
     <DiscussionThread discussions={discussions} />
+    </>
   )
 }
 
