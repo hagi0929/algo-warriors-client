@@ -17,7 +17,7 @@ interface ContestUser {
 const ContestScores: React.FC<ContestScoresProps> = () => {
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
-            <h2 className="text-xl font-bold mb-4">Contest Scores</h2>
+            <h2 className="text-xl font-bold mb-4">Current Contest Scores</h2>
             <Table>
                 <TableHeader>
                 <TableRow>

@@ -28,6 +28,7 @@ import { Contest } from "../models/Contest";
 import { useEffect, useState } from "react";
 import { fetchContests } from "../api/contestApi";
 import { Button } from "./ui/button";
+import { Plus } from 'lucide-react';
 
 const ContestCard: React.FC = () => {
   const [personalContests, setPersonalContests] = useState<Contest[]>([]);
