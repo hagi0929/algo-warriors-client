@@ -1,14 +1,12 @@
-import { useState } from "react"
-// import { Button } from './components/ui/button';
-
-import { Badge } from "./ui/badge"
+import React, { useState, useEffect } from "react";
+import { Badge } from "./ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card"
+} from "./ui/card";
 import {
   Table,
   TableBody,
@@ -16,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table"
+} from "./ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -25,220 +23,101 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./ui/pagination"
-import { Link } from 'react-router-dom';
-import { Button } from "./ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
+} from "./ui/pagination";
+import { Link } from "react-router-dom";
+import { Tag } from "../models/Tag";
+import { fetchTags } from "../api/tagsApi";
+import TagDropdown from "./TagDropDown";
 
 interface ProblemCardProps {
   problems: Problem[];
 }
 
 interface Problem {
-    id: number;
-    title: string;
-    description: string;
-  }
-
-interface DropDownForm {
   id: number;
-  type: string;
-  content: string;
+  title: string;
+  description: string;
 }
 
-const difficulties: DropDownForm[] = [
-  {
-    id: 1,
-    type: "difficulty",
-    content: "Hard",
-  },
-  {
-    id: 2,
-    type: "difficulty",
-    content: "Medium",
-  },
-  {
-    id: 3,
-    type: "difficulty",
-    content: "Easy",
-  },
-]
-
-const subcategories: DropDownForm[] = [
-  {
-    id: 1,
-    type: "subcategory",
-    content: "string",
-  },
-  {
-    id: 2,
-    type: "subcategory",
-    content: "hash",
-  },
-  {
-    id: 3,
-    type: "subcategory",
-    content: "ahhh",
-  },
-]
-
-const sources: DropDownForm[] = [
-  {
-    id: 1,
-    type: "source",
-    content: "0",
-  },
-  {
-    id: 2,
-    type: "source",
-    content: "1",
-  },
-  {
-    id: 3,
-    type: "difficulty",
-    content: "2",
-  },
-]
-
-
 const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
-  const [posDifficulty, setPosDifficulty] = useState(-1)
-  const [curDifficulty, setCurDifficulty] = useState('')
+  const [difficulties, setDifficulties] = useState<Tag[]>([]);
+  const [subcategories, setSubcategories] = useState<Tag[]>([]);
+  const [sources, setSources] = useState<Tag[]>([]);
+  const [curDifficulty, setCurDifficulty] = useState("");
+  const [curCat, setCurCat] = useState("");
+  const [curSource, setCurSource] = useState("");
 
-  const [posCat, setposCat] = useState(-1)
-  const [curCat, setCurCat] = useState('')
+  useEffect(() => {
+    fetchTags()
+      .then((tags) => {
+        setDifficulties(tags.filter(tag => tag.type === "difficulty" && tag.content.trim() !== ""));
+        setSubcategories(tags.filter(tag => tag.type === "subcategory" && tag.content.trim() !== ""));
+        setSources(tags.filter(tag => tag.type === "source" && tag.content.trim() !== ""));
+      })
+      .catch((err) => {
+        console.error("Failed to fetch tags:", err);
+      });
+  }, []);
 
-
-  const [posSource, setPosSource] = useState(-1)
-  const [curSource, setCurSource] = useState('')
-
-  const handleDifficultyChange = (id: number) => {
-    const selectedDifficulty = difficulties.find(difficulty => difficulty.id === id);
-    setPosDifficulty(id);
-    setCurDifficulty(selectedDifficulty ? selectedDifficulty.content : '');
-  };
-
-  const handleCatChange = (id: number) => {
-    const selectedCat = subcategories.find(cat => cat.id === id);
-    setposCat(id);
-    setCurCat(selectedCat ? selectedCat.content : '');
-  };
-
-  const handleSrcChange = (id: number) => {
-    const selectedCat = subcategories.find(cat => cat.id === id);
-    setPosSource(id);
-    setCurSource(selectedCat ? selectedCat.content : '');
-  };
-
-  const difficultyLabel = 'Difficulty';
-  const catLabel = 'Category';
-  const sourceLabel = 'Source';
-
-    return (
-        <>
-        <Card className="problem-card">
+  return (
+    <>
+      <Card className="problem-card">
         <CardHeader className="px-7">
-            <CardTitle>Problems</CardTitle>
-            <CardDescription>Try attempting a problem to better your coding skills!</CardDescription>
+          <CardTitle>Problems</CardTitle>
+          <CardDescription>
+            Try attempting a problem to better your coding skills!
+          </CardDescription>
         </CardHeader>
         <CardContent>
+          <TagDropdown
+            label="Difficulty"
+            tags={difficulties}
+            selectedValue={curDifficulty}
+            onChange={setCurDifficulty}
+          />
+          <TagDropdown
+            label="Category"
+            tags={subcategories}
+            selectedValue={curCat}
+            onChange={setCurCat}
+          />
+          <TagDropdown
+            label="Source"
+            tags={sources}
+            selectedValue={curSource}
+            onChange={setCurSource}
+          />
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              {difficultyLabel}
-            </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Available Difficulties</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={curDifficulty} onValueChange={setCurDifficulty}>
-              {difficulties.map(d => (
-                <DropdownMenuRadioItem key={d.id}
-                  value={d.content}
-                  onSelect={() => handleDifficultyChange(d.id)}
-                >{d.content}</DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              {catLabel}
-            </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={curCat} onValueChange={setCurCat}>
-              {subcategories.map(d => (
-                <DropdownMenuRadioItem key={d.id}
-                  value={d.content}
-                  onSelect={() => handleCatChange(d.id)}
-                >{d.content}</DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              {sourceLabel}
-            </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={curSource} onValueChange={setCurSource}>
-              {sources.map(d => (
-                <DropdownMenuRadioItem key={d.id}
-                  value={d.content}
-                  onSelect={() => handleSrcChange(d.id)}
-                >{d.content}</DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-            <Table>
+          <Table>
             <TableHeader>
               <TableRow className="pt-6 flex space-around">
                 <TableHead></TableHead>
                 <TableHead className="hidden sm:table-cell">Title</TableHead>
                 <TableHead className="hidden sm:table-cell">Description</TableHead>
-                </TableRow>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {problems.map(p => (
-              <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
-                <Link to={`/problem/${p.id}`} className="flex w-full">
-                  <TableCell>
-                    <div className="hidden text-sm text-muted-foreground md:inline">
-                      {p.id}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">{p.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge className="text-xs" variant="secondary">
-                      {p.description}
-                    </Badge>
-                  </TableCell>
-                </Link>
-              </TableRow>
-            ))}
+              {problems.map((p) => (
+                <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
+                  <Link to={`/problem/${p.id}`} className="flex w-full">
+                    <TableCell>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        {p.id}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      {p.title}
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <Badge className="text-xs" variant="secondary">
+                        {p.description}
+                      </Badge>
+                    </TableCell>
+                  </Link>
+                </TableRow>
+              ))}
             </TableBody>
-            </Table>
+          </Table>
         </CardContent>
         <Pagination>
           <PaginationContent>
@@ -256,9 +135,9 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-        </Card>
-        </>
-    )
-}
+      </Card>
+    </>
+  );
+};
 
 export default ProblemCard;
