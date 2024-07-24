@@ -6,7 +6,7 @@ import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {}
 
-const languageIdMapping = {
+const languageIdMapping: { [key: string]: number } = {
   javascript: 63, // JavaScript (Node.js 12.14.0)
   typescript: 74, // TypeScript (3.7.4)
   python: 92,     // Python (3.11.2)
@@ -54,24 +54,14 @@ const CodeEditor = (props: Props) => {
 
   const handleSubmit = () => {
     if (editorRef.current) {
-      const code = editorRef.current.getValue();
+      const code = (editorRef.current as any)?.getValue();
+      var formattedCode = code.trim();
+      formattedCode = formattedCode.split('\n').map((line: string) => line.trim()).join('\\n');
       const languageId = languageIdMapping[language];
-      // Call the backend API to submit the code
-      fetch('https://your-backend-api.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code, languageId }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the backend
-          console.log('Success:', data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+
+      console.log('Code:', formattedCode);
+      console.log('Language:', languageId);
+      //TODO: Submit code to the backend
     }
   };
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchProblems } from '../api/problemsApi';
+import { fetchProblems,fetchProblemDescription } from '../api/problemsApi';
 import { Problem } from '../models/Problem';
 
 export const useProblems = () => {
@@ -8,4 +8,11 @@ export const useProblems = () => {
     queryFn: fetchProblems,
   });
 
+};
+
+export const useProblemDescription = (id:string) => {
+  return useQuery<Problem[], Error>({
+    queryKey: ['problems'],
+    queryFn: () => fetchProblemDescription(id),
+  });
 };
