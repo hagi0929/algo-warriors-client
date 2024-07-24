@@ -36,7 +36,6 @@ interface ProblemCardProps {
 interface Problem {
   id: number;
   title: string;
-  description: string;
 }
 
 const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
@@ -97,25 +96,19 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {problems.map((p) => (
-                <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
-                  <Link to={`/problem/${p.id}`} className="flex w-full">
-                    <TableCell>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        {p.id}
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      {p.title}
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      <Badge className="text-xs" variant="secondary">
-                        {p.description}
-                      </Badge>
-                    </TableCell>
-                  </Link>
-                </TableRow>
-              ))}
+              {problems.map(p => (
+              <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
+                <Link to={`/problem/${p.id}`} className="flex w-full">
+                  <TableCell>
+                    <div className="hidden text-sm text-muted-foreground md:inline">
+                      {p.id}
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">{p.title}</TableCell>
+                  
+                </Link>
+              </TableRow>
+            ))}
             </TableBody>
           </Table>
         </CardContent>

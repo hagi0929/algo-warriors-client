@@ -5,6 +5,7 @@ import ProblemPage from "../pages/ProblemPage";
 import ContestPage from "../pages/ContestPage";
 import DiscussionPage from "../pages/DiscussionPage";
 import LoginPage from "../pages/LoginPage"
+import ResourcesPage from "../pages/ResourcesPage";
 
 export const router = createBrowserRouter ([
     {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter ([
             {path: "problem/:problem_id", element: <ProblemPage/>},
             {path: "contest/:contest_id", element: <ContestPage/>},
             {path: "discussion/:discussionId", element: <DiscussionPage/>}
+            {path: "resources", element: <ResourcesPage/>}
         ]
     }
 ])
