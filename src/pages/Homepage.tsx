@@ -1,8 +1,6 @@
-// import{React}
-// import { Button } from './components/ui/button';
-
 import ContestCard from "../components/ContestCard";
 import ProblemCard from "../components/ProblemCard";
+import Navbar from '../components/Navbar';
 import { useProblems } from "../hooks/useProblems";
 
 interface Props {}
@@ -44,6 +42,8 @@ const HomePage = (props: Props) => {
     const problemsArray = Array.isArray(problems) ? problems : [];
 
     return (
+        <>
+        <Navbar />
         <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
             <div className="col-span-3">
                 <ProblemCard problems={problemsArray}/>
@@ -52,7 +52,7 @@ const HomePage = (props: Props) => {
                 <ContestCard contests={contests}/>
             </div>
         </div>
-    
+        </>
     )
 }
 

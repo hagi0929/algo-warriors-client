@@ -1,0 +1,62 @@
+.resources-page {
+  padding: 20px;
+}
+
+.resource-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 10px;
+  width: 300px;
+  box-sizing: border-box;
+  border: #3b82f6 2px solid;
+  border-radius: 5px;
+}
+
+.resource-card {
+  margin-top: 20px;
+}
+
+.table-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+
+.bg-accent {
+  background-color: #f9fafb;
+}
+
+.bg-hover-accent:hover {
+  background-color: #f1f3f5;
+}
+
+.text-blue-500 {
+  color: #3b82f6;
+}
+
+.text-blue-500:hover {
+  text-decoration: underline;
+}
+
+.disabled {
+  pointer-events: none;
+  color: gray;
+}

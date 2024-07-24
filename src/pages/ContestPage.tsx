@@ -1,7 +1,7 @@
-import React from 'react'
 import { Card } from '../components/ui/card';
 import ContestDescr from '../components/ContestDescr';
 import ContestProblemCard from '../components/ContestProblemCard';
+import Navbar from '../components/Navbar';
 
 interface Props {}
 
@@ -32,19 +32,22 @@ const problems: Problem[] = [
 
 const ContestPage = (props: Props) => {
   return (
-    <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
-        <div className="col-span-3">
-            <ContestProblemCard problems={problems}/>
-        </div>
-        <div className="col-span-2">
-          <Card className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="flex-1 py-2 px-4 text-center text-lg font-bold">
-                  {'Description'}
-              </div>
-          </Card>
-          <ContestDescr/>
-        </div>
-    </div>
+    <>
+      <Navbar/>
+      <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
+          <div className="col-span-3">
+              <ContestProblemCard problems={problems}/>
+          </div>
+          <div className="col-span-2">
+            <Card className="bg-white rounded-lg overflow-hidden shadow-md">
+                <div className="flex-1 py-2 px-4 text-center text-lg font-bold">
+                    {'Description'}
+                </div>
+            </Card>
+            <ContestDescr/>
+          </div>
+      </div>
+    </>
   )
 }
 
