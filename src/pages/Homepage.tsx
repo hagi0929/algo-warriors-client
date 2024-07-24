@@ -15,6 +15,7 @@ import {
 import ContestProblemCard from "../components/ContestProblemCard";
 import { Card } from "../components/ui/card";
 import ContestDescr from "../components/ContestDescr";
+import { useContests } from "../hooks/useContests";
 
 interface Props { }
 
@@ -64,21 +65,24 @@ const contests: Problem[] = [
 
 
 const HomePage = (props: Props) => {
+
+    const { data: problems } = useProblems();
+    const { data: contests } = useContests();
     return (
         <>
             <Navbar />
-                <ResizablePanelGroup
+            <ResizablePanelGroup
                 className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm"
-                    direction="horizontal"
-                >
-                    <ResizablePanel minSize={30} className="col-span-3">
-                        <ProblemCard problems={problems}/>
-                    </ResizablePanel>
-                    <ResizableHandle withHandle />
-                    <ResizablePanel minSize={30}className="col-span-2">
-                        <ContestCard contests={contests}/>
-                    </ResizablePanel>
-                </ResizablePanelGroup>
+                direction="horizontal"
+            >
+                <ResizablePanel minSize={30} className="col-span-3">
+                    <ProblemCard problems={problems} />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel minSize={30} className="col-span-2">
+                    <ContestCard contests={contests} />
+                </ResizablePanel>
+            </ResizablePanelGroup>
 
         </>
 
