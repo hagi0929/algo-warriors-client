@@ -3,6 +3,7 @@ import { Card } from './ui/card';
 import ProblemTabDescr from './ProblemTabDescr';
 import ProblemTabTest from './ProblemTabTest';
 import ProblemTabDiscuss from './ProblemTabDiscuss';
+import RecommendedProblems from './RecommendedProblems';
 
 // Define a type for tab content
 type TabContent = {
@@ -41,6 +42,7 @@ const ProblemTabs: React.FC = () => {
                 {tabs.map(tab => (
                     <div key={tab.id} className={`${activeTab === tab.id ? '' : 'hidden'}`}>
                         {tab.component}
+                        {activeTab === 'Description' && tab.id === 'Description' && <RecommendedProblems />}
                     </div>
                 ))}
             </div>
