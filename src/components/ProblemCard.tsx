@@ -49,70 +49,98 @@ interface Problem {
   }
 
 interface DropDownForm {
-  value: string;
-  label: string;
+  id: number;
+  type: string;
+  content: string;
 }
 
 const difficulties: DropDownForm[] = [
   {
-    value: "hard",
-    label: "Hard",
+    id: 1,
+    type: "difficulty",
+    content: "Hard",
   },
   {
-    value: "medium",
-    label: "Medium",
+    id: 2,
+    type: "difficulty",
+    content: "Medium",
   },
   {
-    value: "easy",
-    label: "Easy",
+    id: 3,
+    type: "difficulty",
+    content: "Easy",
   },
 ]
 
-const types: DropDownForm[] = [
+const subcategories: DropDownForm[] = [
   {
-    value: "string",
-    label: "String",
+    id: 1,
+    type: "subcategory",
+    content: "string",
   },
   {
-    value: "binary_search",
-    label: "Binary Search",
+    id: 2,
+    type: "subcategory",
+    content: "hash",
   },
   {
-    value: "regex",
-    label: "Regex",
+    id: 3,
+    type: "subcategory",
+    content: "ahhh",
+  },
+]
+
+const sources: DropDownForm[] = [
+  {
+    id: 1,
+    type: "source",
+    content: "0",
   },
   {
-    value: "trie",
-    label: "Trie",
+    id: 2,
+    type: "source",
+    content: "1",
+  },
+  {
+    id: 3,
+    type: "difficulty",
+    content: "2",
   },
 ]
 
 
 const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
-  const [posDifficulty, setPosDifficulty] = useState(difficulties[0].value)
-  const [curDifficulty, setCurDifficulty] = useState("")
+  const [posDifficulty, setPosDifficulty] = useState(-1)
+  const [curDifficulty, setCurDifficulty] = useState('')
 
-  const [posType, setPosType] = useState(types[0].value)
-  const [curType, setCurType] = useState("")
+  const [posCat, setposCat] = useState(-1)
+  const [curCat, setCurCat] = useState('')
 
-  const handleDifficultyChange = (value: string) => {
-    setPosDifficulty(value);
-    setCurDifficulty(value);
+
+  const [posSource, setPosSource] = useState(-1)
+  const [curSource, setCurSource] = useState('')
+
+  const handleDifficultyChange = (id: number) => {
+    const selectedDifficulty = difficulties.find(difficulty => difficulty.id === id);
+    setPosDifficulty(id);
+    setCurDifficulty(selectedDifficulty ? selectedDifficulty.content : '');
   };
 
-  const handleTypeChange = (value: string) => {
-    setPosType(value);
-    setCurType(value);
+  const handleCatChange = (id: number) => {
+    const selectedCat = subcategories.find(cat => cat.id === id);
+    setposCat(id);
+    setCurCat(selectedCat ? selectedCat.content : '');
   };
 
-  const curDifficultyLabel = curDifficulty != ""
-    ? difficulties.find(difficulty => difficulty.value === curDifficulty)?.label
-    : 'Difficulty';
+  const handleSrcChange = (id: number) => {
+    const selectedCat = subcategories.find(cat => cat.id === id);
+    setPosSource(id);
+    setCurSource(selectedCat ? selectedCat.content : '');
+  };
 
-  const curTypeLabel = curType != ""
-  ? types.find(type => type.value === curType)?.label
-  : 'Category';
-
+  const difficultyLabel = 'Difficulty';
+  const catLabel = 'Category';
+  const sourceLabel = 'Source';
 
     return (
         <>
@@ -126,17 +154,18 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Button variant="outline">
-              {curDifficultyLabel}
+              {difficultyLabel}
             </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Available Difficulties</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={posDifficulty} onValueChange={handleDifficultyChange}>
+              <DropdownMenuRadioGroup value={curDifficulty} onValueChange={setCurDifficulty}>
               {difficulties.map(d => (
-                <DropdownMenuRadioItem key={d.value} value={d.value}>
-                  {d.label}
-                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem key={d.id}
+                  value={d.content}
+                  onSelect={() => handleDifficultyChange(d.id)}
+                >{d.content}</DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
             </DropdownMenuContent>
@@ -145,17 +174,38 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Button variant="outline">
-              {curTypeLabel}
+              {catLabel}
             </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={posType} onValueChange={handleTypeChange}>
-              {types.map(d => (
-                <DropdownMenuRadioItem key={d.value} value={d.value}>
-                  {d.label}
-                </DropdownMenuRadioItem>
+              <DropdownMenuRadioGroup value={curCat} onValueChange={setCurCat}>
+              {subcategories.map(d => (
+                <DropdownMenuRadioItem key={d.id}
+                  value={d.content}
+                  onSelect={() => handleCatChange(d.id)}
+                >{d.content}</DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              {sourceLabel}
+            </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup value={curSource} onValueChange={setCurSource}>
+              {sources.map(d => (
+                <DropdownMenuRadioItem key={d.id}
+                  value={d.content}
+                  onSelect={() => handleSrcChange(d.id)}
+                >{d.content}</DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
             </DropdownMenuContent>
