@@ -15,7 +15,7 @@ export const router = createBrowserRouter ([
             {path: "home", element: <HomePage/>},
             {path: "problem/:problem_id", element: <ProblemPage/>},
             {path: "contest/:contest_id", element: <ContestPage/>},
-            {path: "discussion/:discussion_id", element: <DiscussionPage/>}
+            {path: "discussion/:discussionId", element: <DiscussionPage/>}
         ]
     }
 ])

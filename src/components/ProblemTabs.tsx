@@ -14,7 +14,7 @@ type TabContent = {
 const tabs: TabContent[] = [
     { id: 'Description', component: <ProblemTabDescr /> },
     { id: 'Testing', component: <ProblemTabTest /> },
-    { id: 'Discussions', component: <ProblemTabDiscuss /> },
+    { id: 'Discussions', component: <ProblemTabDiscuss problemId={1}/> },
 ];
 
 const ProblemTabs: React.FC = () => {

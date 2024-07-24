@@ -1,38 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableRow, TableCell } from './ui/table';
 import { Link } from 'react-router-dom';
 import MainThreadForm from './MainThreadForm';
 import { CirclePlus } from 'lucide-react';
+import { Discussion } from '../models/Discussion';
+import { fetchDiscussionsByProblem } from '../api/discussionProblemApi';
 
-interface ProblemTabDiscussProps {}
+interface ProblemTabDiscussProps {
+  problemId: number
+}
 
-type Discuss = {
-  id: number;
-  title: string;
-  content: string;
-};
+const initialDiscussions: Discussion[] = [];
 
-const initialDiscussions: Discuss[] = [
-  { id: 1, title: 'This is the first discussion for this problem', content: "undefined" },
-  { id: 2, title: 'This is the second discussion for this problem', content: "undefined" },
-  { id: 3, title: 'This is the third discussion for this problem', content: "undefined" },
-];
-
-const ProblemTabDiscuss: React.FC<ProblemTabDiscussProps> = () => {
-  const [discussions, setDiscussions] = useState<Discuss[]>(initialDiscussions);
+const ProblemTabDiscuss: React.FC<ProblemTabDiscussProps> = ({problemId}) => {
+  const [discussions, setDiscussions] = useState<Discussion[]>(initialDiscussions);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchDiscussionsByProblem(problemId)
+      .then((data) => {
+        setDiscussions(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+  
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  
   const handleAddDiscussionClick = () => {
     setShowForm(true);
   };
 
   const handleFormSubmit = (title: string, content: string) => {
-    const newDiscussion: Discuss = {
-      id: discussions.length + 1, // Simple ID generation
-      title: title,
-      content: content
-    };
-    setDiscussions([...discussions, newDiscussion]);
+    // const newDiscussion: Discuss = {
+    //   discussion_id: discussions.length + 1, // Simple ID generation
+    //   title: title,
+    //   content: content
+    // };
+    // setDiscussions([...discussions, newDiscussion]);
     setShowForm(false);
   };
 
@@ -64,8 +75,8 @@ const ProblemTabDiscuss: React.FC<ProblemTabDiscussProps> = () => {
       </div>
       <Table>
         {discussions.map((d) => (
-          <TableRow key={d.id} className="bg-accent hover:bg-hover-accent shadow-md">
-            <Link to={`/discussion/${d.id}`} className="flex w-full">
+          <TableRow key={d.discussion_id} className="bg-accent hover:bg-hover-accent shadow-md">
+            <Link to={`/discussion/${d.discussion_id}`} className="flex w-full">
               <TableCell>{d.title}</TableCell>
             </Link>
           </TableRow>
