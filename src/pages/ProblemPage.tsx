@@ -2,10 +2,14 @@ import React from 'react'
 import CodeEditor from '../components/CodeEditor'
 import ProblemTabs from '../components/ProblemTabs'
 import Navbar from '../components/Navbar';
+import { useParams } from 'react-router';
 
-interface Props {}
+interface Props {
+
+}
 
 const ProblemPage = (props: Props) => {
+  const { problem_id } = useParams<{ problem_id: string }>();
   return (
     <>
       <Navbar/>
@@ -14,7 +18,7 @@ const ProblemPage = (props: Props) => {
               <CodeEditor/>
           </div>
           <div className="col-span-2">
-              <ProblemTabs/>
+              <ProblemTabs problemId={Number(problem_id)}/>
           </div>
       </div>
     </>

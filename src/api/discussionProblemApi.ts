@@ -2,7 +2,8 @@ import { Discussion } from "../models/Discussion";
 
 export const fetchDiscussionsByProblem = async (problemId: number): Promise<Discussion[]> => {
     try {
-        const response = await fetch(`http://10.32.124.68:3000/discussions/problem/${problemId}`);
+        console.log(problemId);
+        const response = await fetch(`http://127.0.0.1:3000/discussions/problem/${problemId}`);
         if (!response.ok) {
         throw new Error(`Failed to fetch discussions: ${response.statusText}`);
         }
@@ -27,7 +28,7 @@ export const fetchDiscussionsByProblem = async (problemId: number): Promise<Disc
 
 export const fetchDiscussionsById = async (discussionId: number): Promise<Discussion> => {
     try {
-        const response = await fetch(`http://10.32.124.68:3000/discussions/discussion/${discussionId}`);
+        const response = await fetch(`http://127.0.0.1:3000/discussions/discussion/${discussionId}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch discussions: ${response.statusText}`);
         }
@@ -49,7 +50,7 @@ export const fetchDiscussionsById = async (discussionId: number): Promise<Discus
 
 export const fetchDiscussionsReplies = async (discussionId: number): Promise<Discussion[]> => {
     try {
-        const response = await fetch(`http://10.32.124.68:3000/discussions/thread/${discussionId}`);
+        const response = await fetch(`http://127.0.0.1:3000/discussions/thread/${discussionId}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch discussions: ${response.statusText}`);
         }
@@ -72,3 +73,40 @@ export const fetchDiscussionsReplies = async (discussionId: number): Promise<Dis
         throw error;
     }
 };
+
+export const createDiscussion = async (
+    problemId: number,
+    parentdiscussionId: number | null,
+    userId: number,
+    title: string | null,
+    content: string
+  ) =>  {
+    
+    const requestData = {
+      problem_id: problemId,
+      parentdiscussion_id: parentdiscussionId,
+      user_id: userId,
+      title: title,
+      content: content
+    };
+    
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/discussions/${problemId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log('Discussion created:', responseData);
+    } catch (error) {
+      console.error('Error creating discussion:', error);
+    }
+  };
+    

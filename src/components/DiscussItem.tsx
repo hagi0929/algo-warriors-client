@@ -3,7 +3,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './
 import { MessageSquare } from 'lucide-react';
 import ReplyForm from './ReplyForm';
 import { Discussion } from '../models/Discussion';
-import { fetchDiscussionsReplies } from '../api/discussionProblemApi';
+import { fetchDiscussionsReplies, createDiscussion } from '../api/discussionProblemApi';
 
 interface DiscussionProps {
   discussion: Discussion;
@@ -44,15 +44,27 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
     if (error) return <div>Error: {error}</div>;
     if (!discussion) return <div>No discussion found</div>;
   
-    const addDiscussion = (content: string, parentId: number) => {
-        // const newId = discussions.length > 0 ? Math.max(...discussions.map(d => d.id)) + 1 : 1;
-        // const newDiscussion: Discussion = {
-        //   id: newId,
-        //   content,
-        //   parent_id: parentId,
-        //   title: undefined
-        // };
-        // setDiscussions([...discussions, newDiscussion]);
+    const addDiscussion = (content: string, parentId: number, problemId: number) => {
+        createDiscussion(problemId, parentId, 1, null, content)
+        .then(() => {
+            console.log("inserted")
+        })
+        .catch((err) => {
+            setError(err.message);
+            setLoading(false);
+        });
+        const newId = discussions.length > 0 ? Math.max(...discussions.map(d => d.discussion_id)) + 1 : 1;
+        const newDiscussion: Discussion = {
+          discussion_id: newId,
+          content: content,
+          parentdiscussion_id: parentId,
+          title: null,
+          created_at: "",
+          updated_at: "",
+          user_id: 1,
+          problem_id: problemId
+        };
+        setDiscussions([...discussions, newDiscussion]);
       };
     
     
@@ -61,9 +73,9 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
         setReplyingTo(id);
       };
       
-      const handleReplySubmit = (replyText: string, parentId: number) => {
+      const handleReplySubmit = (replyText: string, parentId: number, problemId: number) => {
         console.log(`Reply submitted for discussion ID ${parentId}: ${replyText}`);
-        addDiscussion(replyText, parentId);
+        addDiscussion(replyText, parentId, problemId);
         setIsReplying(false);
         setReplyingTo(-1);
       };
@@ -95,7 +107,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                 )}
                             {(replyingTo === reply.discussion_id) && (
                                 <ReplyForm
-                                discussionId={reply.discussion_id}
+                                discussion={reply}
                                 onSubmit={handleReplySubmit}
                                 onCancel={handleReplyCancel}
                                 />
@@ -121,7 +133,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                 )}
                             {(replyingTo === reply.discussion_id) && (
                                 <ReplyForm
-                                discussionId={reply.discussion_id}
+                                discussion={reply}
                                 onSubmit={handleReplySubmit}
                                 onCancel={handleReplyCancel}
                                 />

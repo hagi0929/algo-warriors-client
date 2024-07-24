@@ -4,26 +4,29 @@ import ProblemTabDescr from './ProblemTabDescr';
 import ProblemTabTest from './ProblemTabTest';
 import ProblemTabDiscuss from './ProblemTabDiscuss';
 
+interface TabContentProps {
+    problemId: number;
+}
+
 // Define a type for tab content
 type TabContent = {
     id: string;
     component: React.ReactNode;
 };
 
-// Define tab content with components
-const tabs: TabContent[] = [
-    { id: 'Description', component: <ProblemTabDescr /> },
-    { id: 'Testing', component: <ProblemTabTest /> },
-    { id: 'Discussions', component: <ProblemTabDiscuss problemId={1}/> },
-];
 
-const ProblemTabs: React.FC = () => {
+const ProblemTabs: React.FC<TabContentProps> = ({problemId}) => {
+    // Define tab content with components
+    const tabs: TabContent[] = [
+        { id: 'Description', component: <ProblemTabDescr /> },
+        { id: 'Testing', component: <ProblemTabTest /> },
+        { id: 'Discussions', component: <ProblemTabDiscuss problemId={problemId}/> },
+    ];
     const [activeTab, setActiveTab] = useState<string>(tabs[0].id);
-
     const handleTabClick = (tabId: string) => {
         setActiveTab(tabId);
     };
-
+    
     return (
         <Card className="bg-white rounded-lg overflow-hidden shadow-md">
             <div className="flex">

@@ -4,7 +4,7 @@ import { MessageSquare } from 'lucide-react';
 import ReplyForm from './ReplyForm';
 import DiscussionItem from './DiscussItem';
 import { Discussion } from '../models/Discussion';
-import { fetchDiscussionsReplies } from '../api/discussionProblemApi';
+import { fetchDiscussionsReplies, createDiscussion } from '../api/discussionProblemApi';
 
 interface DiscussionProps {
   mainDiscussion: Discussion | null;
@@ -38,17 +38,36 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
   if (error) return <div>Error: {error}</div>;
   if (!mainDiscussion) return <div>No main discussion found</div>;
 
-  const addDiscussion = (content: string, parentId: number) => {
-    // Implement the logic to add a new discussion (reply)
+  const addDiscussion = (content: string, parentId: number, problemId: number) => {
+    createDiscussion(problemId, parentId, 1, null, content)
+        .then(() => {
+            console.log("inserted")
+        })
+        .catch((err) => {
+            setError(err.message);
+            setLoading(false);
+        });
+        const newId = discussions.length > 0 ? Math.max(...discussions.map(d => d.discussion_id)) + 1 : 1;
+        const newDiscussion: Discussion = {
+          discussion_id: newId,
+          content: content,
+          parentdiscussion_id: parentId,
+          title: null,
+          created_at: "",
+          updated_at: "",
+          user_id: 1,
+          problem_id: problemId
+        };
+        setDiscussions([...discussions, newDiscussion]);
   };
 
   const handleReplyClick = () => {
     setIsReplying(!isReplying);
   };
 
-  const handleReplySubmit = (replyText: string, parentId: number) => {
+  const handleReplySubmit = (replyText: string, parentId: number, problemId: number) => {
     console.log(`Reply submitted for discussion ID ${parentId}: ${replyText}`);
-    addDiscussion(replyText, mainDiscussion.discussion_id);
+    addDiscussion(replyText, mainDiscussion.discussion_id, problemId);
     setIsReplying(false);
   };
 
@@ -78,14 +97,16 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
                 )}
                 {isReplying && (
                   <ReplyForm
-                    discussionId={mainDiscussion.discussion_id}
+                    discussion={mainDiscussion}
                     onSubmit={handleReplySubmit}
                     onCancel={handleReplyCancel}
                   />
                 )}
               </div>
             </div>
-            <DiscussionItem discussion={mainDiscussion} discussions={discussions} />
+            {discussions.length > 0 && (
+                <DiscussionItem discussion={mainDiscussion} discussions={discussions} />
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>

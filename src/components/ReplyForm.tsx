@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { MessageCirclePlus } from 'lucide-react';
 import { Trash } from 'lucide-react';
+import { Discussion } from '../models/Discussion';
 
 interface ReplyFormProps {
-  discussionId: number;
-  onSubmit: (replyText: string, parentId: number) => void;
+  discussion: Discussion;
+  onSubmit: (replyText: string, parentId: number, problemId: number) => void;
   onCancel: () => void;
 }
 
-const ReplyForm: React.FC<ReplyFormProps> = ({ discussionId, onSubmit, onCancel }) => {
+const ReplyForm: React.FC<ReplyFormProps> = ({ discussion, onSubmit, onCancel }) => {
   const [replyText, setReplyText] = useState('');
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(replyText, discussionId);
+    onSubmit(replyText, discussion.discussion_id, discussion.problem_id);
     setReplyText('');
   };
 
