@@ -22,7 +22,7 @@ type TabContent = {
 const ProblemTabs: React.FC<TabContentProps> = ({problemId}) => {
     // Define tab content with components
     const tabs: TabContent[] = [
-        { id: 'Description', component: <ProblemTabDescr problemId={problemId} /> },
+        { id: 'Description', component: <ProblemTabDescr problemId={String(problemId)} /> },
         { id: 'Testing', component: <ProblemTabTest /> },
         { id: 'Discussions', component: <ProblemTabDiscuss problemId={problemId}/> },
     ];

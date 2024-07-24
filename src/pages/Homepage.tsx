@@ -1,6 +1,3 @@
-// import{React}
-// import { Button } from './components/ui/button';
-
 import ContestCard from "../components/ContestCard";
 import ProblemCard from "../components/ProblemCard";
 import Navbar from '../components/Navbar';

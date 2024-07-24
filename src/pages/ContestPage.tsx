@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card } from '../components/ui/card';
 import ContestDescr from '../components/ContestDescr';
 import ContestProblemCard from '../components/ContestProblemCard';
