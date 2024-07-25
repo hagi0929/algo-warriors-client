@@ -3,7 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
@@ -14,8 +14,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table"
-import { useMemo, useState } from "react"
+} from "../components/ui/table";
+import { useMemo, useState } from "react";
 
 interface DataTableProps<AbstractProblem> {
   data: AbstractProblem[],
@@ -62,9 +62,15 @@ export function ProblemTable<AbstractProblem>({
         cell: ({ row }) => {
           const difficultyKey = parseInt(row.getValue("difficulty"));
           const difficultyLabel = tagMap.get(difficultyKey) || "Unknown";
+          const difficultyColor = {
+            "Easy": "text-green-500",
+            "Medium": "text-orange-500",
+            "Hard": "text-red-500"
+          }[difficultyLabel] || "text-gray-500";
+
           return (
             <div className="flex space-x-2">
-              <span className="max-w-[500px] truncate font-medium">
+              <span className={`max-w-[500px] truncate font-medium ${difficultyColor}`}>
                 {difficultyLabel}
               </span>
             </div>
@@ -73,6 +79,7 @@ export function ProblemTable<AbstractProblem>({
       },
       {
         accessorKey: 'categories',
+        header: 'Categories',
         cell: ({ row }) => {
           const temp: string[] = row.getValue("categories") || [];
           const categories = temp.map((catId) => tagMap.get(parseInt(catId)) || catId).join(", ");
@@ -94,14 +101,14 @@ export function ProblemTable<AbstractProblem>({
     columns,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
-  })
-  const [state, setState] = useState(table.initialState)
+  });
+  const [state, setState] = useState(table.initialState);
 
   table.setOptions(prev => ({
     ...prev,
     state,
     onStateChange: setState,
-  }))
+  }));
 
   return (
     <div className="">
@@ -119,7 +126,7 @@ export function ProblemTable<AbstractProblem>({
                         header.getContext()
                       )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -149,5 +156,5 @@ export function ProblemTable<AbstractProblem>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
