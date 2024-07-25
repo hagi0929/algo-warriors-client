@@ -21,7 +21,11 @@ export const fetchProblems = async (): Promise<Problem[]> => {
     for(let i=0; i<data.length; i++) {
       res.push({
         id: data[i].problem_id,
-        title: data[i].title
+        title: data[i].title,
+        description: '',
+        status: '',
+        date: '',
+        value: ''
       });
     }
     return res; // Return parsed data
