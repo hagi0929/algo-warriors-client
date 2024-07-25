@@ -30,6 +30,17 @@ const ResourcesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const resourcesPerPage = 10;
+
+  const colors = [
+    'bg-red-200',
+    'bg-green-200',
+    'bg-blue-200',
+    'bg-yellow-200',
+    'bg-purple-200',
+    'bg-pink-200',
+    'bg-teal-200',
+    'bg-orange-200',
+  ];
   
   const parseTopics = (topicsString: string) => {
     return topicsString
@@ -167,7 +178,7 @@ const ResourcesPage: React.FC = () => {
                   <TableCell className="max-w-[200px]">
                     <div className="tags">
                       {parseTopics(resource.topics).map((topic, index) => (
-                        <Badge key={index} className="tag">
+                        <Badge key={index} className={`tag ${colors[index % colors.length]}`}>
                           {topic}
                         </Badge>
                       ))}

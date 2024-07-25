@@ -57,7 +57,7 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
         console.error("Failed to fetch tags:", err);
       });
   }, []);
-
+  
   return (
     <>
       <Card className="problem-card">
@@ -68,6 +68,7 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           <TagDropdown
             label="Difficulty"
             tags={difficulties}
@@ -86,6 +87,7 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
             selectedValue={curSource}
             onChange={setCurSource}
           />
+        </div>
 
           <Table>
             <TableHeader>

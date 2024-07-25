@@ -60,3 +60,12 @@
   pointer-events: none;
   color: gray;
 }
+
+.bg-red-200 { background-color: #fed7d7; }
+.bg-green-200 { background-color: #c6f6d5; }
+.bg-blue-200 { background-color: #bee3f8; }
+.bg-yellow-200 { background-color: #fefcbf; }
+.bg-purple-200 { background-color: #e9d8fd; }
+.bg-pink-200 { background-color: #fed7e2; }
+.bg-teal-200 { background-color: #b2f5ea; }
+.bg-orange-200 { background-color: #fef3c7; }
