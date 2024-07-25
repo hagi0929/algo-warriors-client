@@ -21,7 +21,7 @@ const languageIdMapping: { [key: string]: number } = {
   css: 43
 };
 
-const getDefaultCode = (language:any) => {
+const getDefaultCode = (language: any) => {
   switch (language) {
     case 'javascript':
       return '// Write your JavaScript code here';
@@ -49,11 +49,11 @@ const CodeEditor: React.FC<Props> = ({ problemId }) => {
   const [language, setLanguage] = useState('javascript');
   const navigate = useNavigate();
 
-  const handleEditorDidMount = (editor:any, monaco:any) => {
+  const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
   };
 
-  const handleLanguageChange = (event:any) => {
+  const handleLanguageChange = (event: any) => {
     setLanguage(event.target.value);
   };
 
@@ -112,39 +112,38 @@ const CodeEditor: React.FC<Props> = ({ problemId }) => {
 
   return (
     <Card className="code-editor w-full h-full">
-      <CardContent className="bg-slate-500 h-full flex flex-col">
-        <div className="flex justify-between items-center mb-2">
-          <select 
-            value={language} 
-            onChange={handleLanguageChange}
-            className="bg-white text-black p-2 rounded"
-          >
-            <option value="javascript">JavaScript</option>
-            <option value="typescript">TypeScript</option>
-            <option value="python">Python</option>
-            <option value="java">Java</option>
-            <option value="csharp">C#</option>
-            <option value="cpp">C++</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-          </select>
-          <button
-              onClick={handleSubmit}
-              className="flex items-center bg-green-500 text-white py-2 px-4 rounded shadow-md hover:bg-green-600"
-          >
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="mr-2" />
-              Submit
-          </button>
-        </div>
+      <div className="flex justify-between items-center mb-2">
+        <select
+          value={language}
+          onChange={handleLanguageChange}
+          className="bg-white text-black p-2 rounded"
+        >
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+        </select>
+        <button
+          onClick={handleSubmit}
+          className="flex items-center bg-green-500 text-white py-2 px-4 rounded shadow-md hover:bg-green-600"
+        >
+          <FontAwesomeIcon icon={faCloudUploadAlt} className="mr-2" />
+          Submit
+        </button>
+      </div>
+
         <Editor
-          height="90%"
+          height="100%"
           width="100%"
           language={language}
           value={getDefaultCode(language)}
           theme="vs-dark"
           onMount={handleEditorDidMount}
         />
-      </CardContent>
     </Card>
   );
 };

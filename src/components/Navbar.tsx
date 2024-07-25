@@ -62,7 +62,7 @@ const Navbar = (props: Props) => {
   };
 
   return (
-    <NavigationMenu.Root className="relative z-[1] w-screen dark:bg-gray navBar">
+    <NavigationMenu.Root className="relative z-[1] w-full dark:bg-gray navBar">
       <NavigationMenu.List className="w-full flex items-center justify-between shadow-blackA4 m-0 list-none rounded-[6px] bg-gray p-1 shadow-[0_2px_10px]">
         <div className="flex items-center">
           <NavigationMenu.Item className='z-40'>

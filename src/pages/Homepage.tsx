@@ -22,10 +22,10 @@ const HomePage = (props: Props) => {
         <>
             <Navbar />
             <ResizablePanelGroup
-                className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm"
+                className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm "
                 direction="horizontal"
             >
-                <ResizablePanel minSize={30} className="col-span-3">
+                <ResizablePanel minSize={30} className="col-span-3 ">
                     <ProblemCard />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
