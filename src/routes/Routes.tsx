@@ -7,18 +7,20 @@ import DiscussionPage from "../pages/DiscussionPage";
 import LoginPage from "../pages/LoginPage"
 import ResourcesPage from "../pages/ResourcesPage";
 import ContestFormPage from "../pages/ContestFormPage";
+import RegisterPage from "../pages/RegisterPage";
 
 export const router = createBrowserRouter ([
     {
         path: "/",
         element: <App />,
         children: [
-            {path: "", element: <LoginPage/>},
             {path: "home", element: <HomePage/>},
             {path: "problem/:problem_id", element: <ProblemPage/>},
             {path: "contest/:contest_id", element: <ContestPage/>},
             {path: "discussion/:discussionId", element: <DiscussionPage/>},
             {path: "resources", element: <ResourcesPage/>},
+            {path: "login", element: <LoginPage/>},
+            {path: "register", element: <RegisterPage/>},
             {path: "add-contest", element: <ContestFormPage/>}
         ]
     }

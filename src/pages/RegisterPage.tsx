@@ -1,24 +1,23 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import logo from '../images/algowarrior_logo.jpeg';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Button } from '../components/ui/button';
 
-interface LoginFormInputs {
+interface RegisterFormInputs {
+  email: string;
   username: string;
   password: string;
 }
-
-interface LoginResponse {
+interface RegisterResponse {
   token: string;
 }
 
 
-const login = async (data: LoginFormInputs): Promise<LoginResponse> => {
+const register = async (data: RegisterFormInputs): Promise<RegisterResponse> => {
   const response = await fetch('http://127.0.0.1:3000/user/login', {
     method: 'POST',
     headers: {
@@ -35,15 +34,14 @@ const login = async (data: LoginFormInputs): Promise<LoginResponse> => {
   return responseData;
 };
 
-const LoginPage: React.FC = () => {
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+const RegisterPage: React.FC = () => {
+  const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormInputs>();
   const navigate = useNavigate();
 
-  const loginMutation = useMutation<LoginResponse, Error, LoginFormInputs>({
-    mutationFn: login,
+  const registerMutation = useMutation<RegisterResponse, Error, RegisterFormInputs>({
+    mutationFn: register,
     onSuccess: (data) => {
       Cookies.set('token', data.token, { expires: 1 });
-      console.log('Login successful, token:', data.token);
       navigate('/home');
     },
     onError: (error) => {
@@ -51,8 +49,8 @@ const LoginPage: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormInputs) => {
-    loginMutation.mutate(data);
+  const onSubmit = (data: RegisterFormInputs) => {
+    registerMutation.mutate(data);
   };
 
   return (
@@ -67,7 +65,18 @@ const LoginPage: React.FC = () => {
       <div className="col-span-2 flex items-center justify-center h-full">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full px-4">
           <div className="w-full">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              rules={{ required: 'Email is required' }}
+              render={({ field }) => <input {...field} id="email" placeholder="Email" className="input w-full px-3 py-2 border border-gray-300 rounded-md" />}
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
+          <div className="w-full">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <Controller
               name="username"
               control={control}
@@ -79,7 +88,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div className="w-full">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <Controller
               name="password"
               control={control}
@@ -90,22 +99,20 @@ const LoginPage: React.FC = () => {
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
           </div>
 
-          <button type="submit" className="w-full bg-slate-500 text-white py-2 rounded-md">
-            {loginMutation.isLoading ? 'Logging in...' : 'Login'}
-          </button>
-          {loginMutation.isError && (
-            <p className="text-red-500 text-sm mt-1">
-              Login failed: {loginMutation.error?.message}
-            </p>
-          )}
-          <div className="w-full text-center mt-2">
-          
-            Don't have an account? <Button variant={"link"} asChild><Link to="/register" className='text-sm font-semibold'>Register</Link></Button>
+          <div className="w-full">
+            <button type="submit" className="w-full bg-slate-500 text-white py-2 rounded-md">Register</button>
           </div>
+          <div className="w-full text-center mt-2">
+            Have an account?<Button variant={"link"} asChild><Link to="/login" className='text-sm font-semibold'>Login</Link></Button>
+
+          </div>
+
         </form>
+
       </div>
+
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
