@@ -20,7 +20,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./ui/pagination";
+} from "./ui/pagination"
+
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Terminal } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -29,6 +30,7 @@ import { useEffect, useState } from "react";
 import { fetchContests } from "../api/contestApi";
 import { Button } from "./ui/button";
 import { Plus } from 'lucide-react';
+  
 
 const ContestCard: React.FC = () => {
   const [personalContests, setPersonalContests] = useState<Contest[]>([]);

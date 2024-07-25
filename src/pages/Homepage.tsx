@@ -1,30 +1,47 @@
+// import{React}
+// import { Button } from './components/ui/button';
+
+import { useQueryClient } from "@tanstack/react-query";
 import ContestCard from "../components/ContestCard";
 import ProblemCard from "../components/ProblemCard";
-import Navbar from '../components/Navbar';
 import { useProblems } from "../hooks/useProblems";
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "../components/ui/resizable"
+import ContestProblemCard from "../components/ContestProblemCard";
+import { Card } from "../components/ui/card";
+import ContestDescr from "../components/ContestDescr";
+import { useContests } from "../hooks/useContests";
+import { AbstractProblem, ProblemFilterOptions } from "../models/Problem";
+import { Contest } from "../models/Contest"
 
-const HomePage = () => {
+interface Props { }
 
-    const { data: problems, error, isLoading } = useProblems();
-    
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error loading results: {error.message}</div>;
-    
-    const problemsArray = Array.isArray(problems) ? problems : [];
+const HomePage = (props: Props) => {
 
     return (
         <>
-        <Navbar />
-        <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
-            <div className="col-span-3">
-                <ProblemCard problems={problemsArray}/>
-            </div>
-            <div className="col-span-2">
-                <ContestCard />
-            </div>
-        </div>
+            <Navbar />
+            <ResizablePanelGroup
+                className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm"
+                direction="horizontal"
+            >
+                <ResizablePanel minSize={30} className="col-span-3">
+                    <ProblemCard />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel minSize={30} className="col-span-2">
+                    <ContestCard/>
+                </ResizablePanel>
+            </ResizablePanelGroup>
+
         </>
+
     )
 }
 
