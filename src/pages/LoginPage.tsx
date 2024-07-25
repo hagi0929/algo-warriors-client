@@ -90,12 +90,12 @@ const LoginPage: React.FC = () => {
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
           </div>
 
-          {/* <button type="submit" className="w-full bg-slate-500 text-white py-2 rounded-md">
+          <button type="submit" className="w-full bg-slate-500 text-white py-2 rounded-md">
             {loginMutation.isLoading ? 'Logging in...' : 'Login'}
-          </button> */}
-          <Link to="/home" className="w-full bg-slate-500 text-white py-2 rounded-md text-center block">
+          </button>
+          {/* <Link to="/home" className="w-full bg-slate-500 text-white py-2 rounded-md text-center block">
             Login
-          </Link>
+          </Link> */}
           {loginMutation.isError && (
             <p className="text-red-500 text-sm mt-1">
               Login failed: {loginMutation.error?.message}
