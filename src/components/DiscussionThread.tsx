@@ -146,7 +146,8 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
                         <span>Update</span>
                       </button>
                     )}
-                    <button
+                    {mainDiscussion.content !== 'DELETED COMMENT' && (
+                      <button
                       onClick={(event) => {
                         event.stopPropagation(); // Stop event propagation
                         handleDeleteClick();
@@ -156,6 +157,7 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
                       <Trash className="w-4 h-4" />
                       <span>Delete</span>
                     </button>
+                    )}
                   </>
                 )}
                 {isReplying && (

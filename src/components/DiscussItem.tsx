@@ -159,6 +159,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                         <span>Update</span>
                                     </button>
                                     )}
+                                    {reply.content !== 'DELETED COMMENT' && (
                                     <button
                                     onClick={(event) => {
                                         event.stopPropagation(); // Stop event propagation
@@ -169,6 +170,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                     <Trash className="w-4 h-4" />
                                     <span>Delete</span>
                                     </button>
+                                    )}
                                 </>
                                 )}
                             {(replyingTo === reply.discussion_id) && (
@@ -206,6 +208,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                         <span>Update</span>
                                     </button>
                                     )}
+                                    {reply.content !== 'DELETED COMMENT' && (
                                     <button
                                     onClick={(event) => {
                                         event.stopPropagation(); // Stop event propagation
@@ -216,6 +219,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                                     <Trash className="w-4 h-4" />
                                     <span>Delete</span>
                                     </button>
+                                    )}
                                 </>
                                 )}
                             {(replyingTo === reply.discussion_id) && (
