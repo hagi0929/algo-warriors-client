@@ -101,7 +101,7 @@ const ProblemCard: React.FC<ProblemCardProps> = () => {
     <>
       <Card className="problem-card">
         <CardHeader className="px-7">
-          <CardTitle>Problems</CardTitle>
+          <CardTitle>{contest_id ? "Contest Problems" : "Problems"}</CardTitle>
           <CardDescription>Try attempting a problem to better your coding skills!</CardDescription>
         </CardHeader>
         <CardContent>
