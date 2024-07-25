@@ -10,18 +10,15 @@ type Problem = {
 
 interface Props {
     problemId: number;
-  }
-
+}
 
 const RecommendedProblems: React.FC<Props> = ({ problemId }) => {
-
     const { data: problems, error, isLoading } = useRecommendedProblems(problemId);
-    
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading results: {error.message}</div>;
-    
-    const problemsArray:Problem[] = Array.isArray(problems) ? problems : [];
+
+    const problemsArray: Problem[] = Array.isArray(problems) ? problems : [];
 
     return (
         <Card className="bg-white rounded-lg overflow-hidden shadow-md p-4 mt-4">
