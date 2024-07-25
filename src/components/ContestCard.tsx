@@ -36,13 +36,27 @@ const ContestCard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const contestsPerPage = 10;
   const pageCount = Math.ceil(contests.length / contestsPerPage);
-
+  
   useEffect(() => {
     const fetchAndSetContests = async () => {
       try {
-        const data = await fetchContests();
-        setContests(data);
-        setPersonalContests(data.slice(0, 3));
+        var res: Contest[] = [];
+        const data : Contest[] = await fetchContests();
+        for(let i=0; i<data.length; i++) {
+          res.push({
+            id: data[i].id,
+            title: data[i].title,
+            description: data[i].description,
+            start_time: data[i].start_time,
+            end_time: data[i].end_time,
+            created_by: data[i].created_by,
+            created_at: data[i].created_at,
+            winner: data[i].winner
+          });
+        }
+        console.log("Fetched contests data inside:", res);
+        setContests(res);
+        setPersonalContests(res.slice(0, 3));
       } catch (err) {
         console.error("Failed to fetch contests:", err);
       }

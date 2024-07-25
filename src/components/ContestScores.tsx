@@ -2,19 +2,18 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 interface ContestScoresProps {
+    scores: ContestUser[];
 }
 
 interface ContestUser {
     user_id: number;
+    username: string;
     score: number;
-  }
+    last_submission: string;
+}
   
-  const contestUsers: ContestUser[] = [
-    { user_id: 1, score: 100 },
-    { user_id: 2, score: 85 },
-  ];
 
-const ContestScores: React.FC<ContestScoresProps> = () => {
+const ContestScores: React.FC<ContestScoresProps> = ({scores}) => {
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
             <h2 className="text-xl font-bold mb-4">Current Contest Scores</h2>
@@ -26,13 +25,13 @@ const ContestScores: React.FC<ContestScoresProps> = () => {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {contestUsers.map((u) => (
-                    <TableRow key={u.user_id}>
+                {scores?.map((participant, index) => (
+                    <TableRow key={participant.user_id}>
                     <TableCell>
-                        <div className="font-medium">{u.user_id}</div>
+                        <div className="font-medium">{participant.username}</div>
                     </TableCell>
                     <TableCell>
-                        <div className="font-medium">{u.score}</div>
+                        <div className="font-medium">{participant.score}</div>
                     </TableCell>
                     </TableRow>
                 ))}
