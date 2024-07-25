@@ -15,7 +15,7 @@ const ProblemPage = (props: Props) => {
       <Navbar/>
       <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm h-screen">
           <div className="col-span-3 h-full">
-              <CodeEditor/>
+              <CodeEditor problemId={Number(problem_id)}/>
           </div>
           <div className="col-span-2">
               <ProblemTabs problemId={Number(problem_id)}/>

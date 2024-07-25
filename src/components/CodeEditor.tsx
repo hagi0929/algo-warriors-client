@@ -1,20 +1,24 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from './ui/card';
 import Editor from '@monaco-editor/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { Result } from '../models/Result';
 
-interface Props {}
+interface Props {
+  problemId: number;
+}
 
 const languageIdMapping: { [key: string]: number } = {
-  javascript: 63, // JavaScript (Node.js 12.14.0)
-  typescript: 74, // TypeScript (3.7.4)
-  python: 92,     // Python (3.11.2)
-  java: 91,       // Java (JDK 17.0.6)
-  csharp: 51,     // C# (Mono 6.6.0.161)
-  cpp: 76,        // C++ (Clang 7.0.1)
-  html: 43,       // Plain Text
-  css: 43         // Plain Text
+  javascript: 63,
+  typescript: 74,
+  python: 92,
+  java: 91,
+  csharp: 51,
+  cpp: 53,
+  html: 43,
+  css: 43
 };
 
 const getDefaultCode = (language:any) => {
@@ -40,9 +44,10 @@ const getDefaultCode = (language:any) => {
   }
 };
 
-const CodeEditor = (props: Props) => {
+const CodeEditor: React.FC<Props> = ({ problemId }) => {
   const editorRef = useRef(null);
   const [language, setLanguage] = useState('javascript');
+  const navigate = useNavigate();
 
   const handleEditorDidMount = (editor:any, monaco:any) => {
     editorRef.current = editor;
@@ -52,16 +57,56 @@ const CodeEditor = (props: Props) => {
     setLanguage(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (editorRef.current) {
       const code = (editorRef.current as any)?.getValue();
-      var formattedCode = code.trim();
-      formattedCode = formattedCode.split('\n').map((line: string) => line.trim()).join('\\n');
+      //var formattedCode:string = code.trim();
+      //formattedCode = formattedCode.split('\n').map((line: string) => line.trim()).join('\\n');
       const languageId = languageIdMapping[language];
 
-      console.log('Code:', formattedCode);
+      console.log('Code:', code);
       console.log('Language:', languageId);
-      //TODO: Submit code to the backend
+
+      try {
+        const response = await fetch('http://127.0.0.1:3000/submission/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            code: code,
+            programming_language: languageId,
+            problem_id: problemId
+          })
+        });
+
+        if (!response.ok) {
+          console.error('Fetch submission failed:', response.statusText);
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error(`Expected application/json but received ${contentType}`);
+        }
+
+        const data = await response.json();
+        var res: Result[] = [];
+        for (let i = 0; i < data.length; i++) {
+          res.push({
+            id: i + 1,
+            statusDescription: data[i].status.description,
+            input: data[i].stdin,
+            output: data[i].stdout,
+            expectedOutput: data[i].expected_output
+          });
+        }
+
+        console.log('Results:', res);
+        navigate('/results', { state: { results: res } });
+      } catch (error) {
+        console.error('Fetch submission failed:', error);
+      }
     }
   };
 

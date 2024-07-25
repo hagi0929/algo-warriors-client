@@ -18,7 +18,7 @@ export const useProblems = (filters: ProblemFilterOptions | null, Pagenation: Pa
 
 export const useProblemDescription = (id:string) => {
   return useQuery<Problem[], Error>({
-    queryKey: ['problem', id],
+    queryKey: ['problem_description'],
     queryFn: () => fetchProblemDescription(id),
   });
 };

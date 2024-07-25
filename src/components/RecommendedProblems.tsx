@@ -1,25 +1,29 @@
 import React from 'react';
 import { Card } from './ui/card';
 import SimpleProblemList from './SimpleProblemList';
+import { useRecommendedProblems } from '../hooks/useRecommendedProblems';
 
 type Problem = {
     id: number;
     title: string;
 };
 
-const recommendedProblems: Problem[] = [
-    { id: 1, title: 'Problem 1' },
-    { id: 2, title: 'Problem 2' },
-    { id: 3, title: 'Problem 3' },
-    { id: 4, title: 'Problem 4' },
-    { id: 5, title: 'Problem 5' },
-];
+interface Props {
+    problemId: number;
+}
 
-const RecommendedProblems: React.FC = () => {
+const RecommendedProblems: React.FC<Props> = ({ problemId }) => {
+    const { data: problems, error, isLoading } = useRecommendedProblems(problemId);
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error loading results: {error.message}</div>;
+
+    const problemsArray: Problem[] = Array.isArray(problems) ? problems : [];
+
     return (
         <Card className="bg-white rounded-lg overflow-hidden shadow-md p-4 mt-4">
             <h3 className="text-xl font-bold mb-2">Recommended Problems</h3>
-            <SimpleProblemList problems={recommendedProblems} />
+            <SimpleProblemList problems={problemsArray} />
         </Card>
     );
 };

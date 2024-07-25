@@ -6,6 +6,7 @@ import ContestPage from "../pages/ContestPage";
 import DiscussionPage from "../pages/DiscussionPage";
 import LoginPage from "../pages/LoginPage"
 import ResourcesPage from "../pages/ResourcesPage";
+import ResultsPage from "../pages/ResultsPage";
 import ContestFormPage from "../pages/ContestFormPage";
 
 export const router = createBrowserRouter ([
@@ -19,6 +20,7 @@ export const router = createBrowserRouter ([
             {path: "contest/:contest_id", element: <ContestPage/>},
             {path: "discussion/:discussionId", element: <DiscussionPage/>},
             {path: "resources", element: <ResourcesPage/>},
+            { path: "results", element: <ResultsPage /> },
             {path: "add-contest", element: <ContestFormPage/>}
         ]
     }
