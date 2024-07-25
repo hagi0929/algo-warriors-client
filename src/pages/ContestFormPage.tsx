@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useProblems } from "../hooks/useProblems";
+import { start } from 'repl';
 
 interface ContestFormInputs {
   title: string;
@@ -25,8 +26,67 @@ const ContestFormPage: React.FC = () => {
   if (error) return <div>Error loading results: {error.message}</div>;
   const problemsArray = Array.isArray(problems) ? problems : [];
 
-  const onSubmit = (data: ContestFormInputs) => {
-    console.log(data);
+  const onSubmit = async (data: ContestFormInputs) => {
+    
+    try {
+      const response = await fetch('http://127.0.0.1:3000/contest/contests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.description,
+          start_time: data.startTime,
+          end_time: data.endTime,
+          created_by: 1
+    
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Creating contest failed:', response.statusText);
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error(`Expected application/json but received ${contentType}`);
+      }
+
+      const res = await response.json();
+      console.log('res:', res);
+      var new_contest_id = res.contest_id;
+      const bodyData = data.problems.map(id => ({
+        contest_id: new_contest_id,
+        problem_id: id
+      }));
+      
+      const response2 = await fetch('http://127.0.0.1:3000/contest/contests/add-problems', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bodyData)
+      });
+
+      if (!response2.ok) {
+        console.error('Fetch submission failed:', response2.statusText);
+        throw new Error(`Network response was not ok: ${response2.statusText}`);
+      }
+
+      const contentType2 = response2.headers.get('content-type');
+      if (!contentType2 || !contentType2.includes('application/json')) {
+        throw new Error(`Expected application/json but received ${contentType2}`);
+      }
+
+      const res2 = await response2.json();
+      console.log('res:', res2);
+
+    } catch (error) {
+      console.error('Creating contest failed', error);
+    }
+    
     navigate('/home');
   };
 
