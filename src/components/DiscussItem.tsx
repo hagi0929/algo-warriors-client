@@ -4,6 +4,7 @@ import { MessageSquare } from 'lucide-react';
 import ReplyForm from './ReplyForm';
 import { Discussion } from '../models/Discussion';
 import { fetchDiscussionsReplies, createDiscussion } from '../api/discussionProblemApi';
+import UpdateDiscussionForm from './UpdateDiscussionForm';
 
 interface DiscussionProps {
   discussion: Discussion;

@@ -110,3 +110,51 @@ export const createDiscussion = async (
     }
   };
     
+
+  export const updateDiscussion = async (discussionId: number, content: string) => {
+    
+    const requestData = {
+      content: content
+    };
+    
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/discussions/${discussionId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log('Discussion updated:', responseData);
+    } catch (error) {
+      console.error('Error updating discussion:', error);
+    }
+  };
+
+  export const deleteDiscussion = async (discussionId: number) => {
+    
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/discussions/${discussionId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log('Discussion deleted:', responseData);
+    } catch (error) {
+      console.error('Error deleting discussion:', error);
+    }
+  };
+    
