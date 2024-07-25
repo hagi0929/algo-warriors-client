@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Pencil, Trash } from 'lucide-react';
 import ReplyForm from './ReplyForm';
 import { Discussion } from '../models/Discussion';
-import { fetchDiscussionsReplies, createDiscussion } from '../api/discussionProblemApi';
+import { fetchDiscussionsReplies, createDiscussion, updateDiscussion, deleteDiscussion } from '../api/discussionProblemApi';
 import UpdateDiscussionForm from './UpdateDiscussionForm';
 
 interface DiscussionProps {
@@ -20,6 +20,8 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
     const replies = getReplies(discussions, discussion.discussion_id);
     const [isReplying, setIsReplying] = useState(false);
     const [replyingTo, setReplyingTo] = useState(-1);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updateingTo, setUpdatingTo] = useState(-1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -67,8 +69,39 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
         };
         setDiscussions([...discussions, newDiscussion]);
       };
+
+      const updateDiscussionContent = (content: string, discussionId: number) => {
+        updateDiscussion(discussionId, content)
+          .then(() => {
+            const updatedDiscussions = discussions.map(d => 
+              d.discussion_id === discussionId ? { ...d, content } : d
+            );
+            setDiscussions(updatedDiscussions);
+          })
+          .catch(err => setError(err.message));
+      };
     
+      const deleteDiscussionContent = (discussionId: number) => {
+        deleteDiscussion(discussionId)
+          .then(() => {
+            // const updatedDiscussions = discussions.map(d => 
+            //   d.discussion_id === discussionId ? { ...d, content: 'Deleted Discussion' } : d
+            // );
+            // setDiscussions(updatedDiscussions);
+          })
+          .catch(err => setError(err.message));
+      };  
+
+      const handleDeleteClick = (discussionId: number) => {
+        deleteDiscussion(discussionId);
+      };
+
+      const handleUpdateClick = (discussionId: number) => {
+        setIsUpdating(!isUpdating);
+        setUpdatingTo(discussionId);
+      };
     
+
       const handleReplyClick = (id: number) => {
         setIsReplying(!isReplying);
         setReplyingTo(id);
@@ -80,10 +113,21 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
         setIsReplying(false);
         setReplyingTo(-1);
       };
+
+      const handleUpdateSubmit = (content: string, discussionId: number) => {
+        updateDiscussionContent(content, discussionId);
+        setIsUpdating(false);
+        setUpdatingTo(-1);
+      };
       
       const handleReplyCancel = () => {
         setIsReplying(false);
         setReplyingTo(-1);
+      };
+
+      const handleUpdateCancel = () => {
+        setIsUpdating(false);
+        setUpdatingTo(-1);
       };
 
     return (
@@ -95,16 +139,37 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                     {getReplies(discussions, reply.discussion_id).length > 0 ? (
                         <Accordion type="multiple">
                         <AccordionItem value={String(reply.discussion_id)}>
-                            <AccordionTrigger>{reply.content}</AccordionTrigger>
-                            <div className="reply pl-1">
-                            {!isReplying && (
-                                <button
-                                onClick={() => handleReplyClick(reply.discussion_id)}
-                                className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
-                                >
-                                <MessageSquare className="w-4 h-4" />
-                                <span>Reply</span>
-                                </button>
+                            <AccordionTrigger className='pb-2'>{reply.content}</AccordionTrigger>
+                            <div className="reply pl-1 actions flex space-x-4">
+                            {!isReplying && !isUpdating && (
+                                <>
+                                    <button
+                                    onClick={() => handleReplyClick(reply.discussion_id)}
+                                    className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                    <MessageSquare className="w-4 h-4" />
+                                    <span>Reply</span>
+                                    </button>
+                                    {reply.content !== 'DELETED COMMENT' && (
+                                    <button
+                                        onClick={() => handleUpdateClick(reply.discussion_id)}
+                                        className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                        <span>Update</span>
+                                    </button>
+                                    )}
+                                    <button
+                                    onClick={(event) => {
+                                        event.stopPropagation(); // Stop event propagation
+                                        handleDeleteClick(reply.discussion_id);
+                                    }}
+                                    className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                    <Trash className="w-4 h-4" />
+                                    <span>Delete</span>
+                                    </button>
+                                </>
                                 )}
                             {(replyingTo === reply.discussion_id) && (
                                 <ReplyForm
@@ -121,16 +186,37 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                         </Accordion>
                     ) : (
                         <AccordionContent className='border-b-2 pr-2 border-slate-200'>
-                            <div className="pl-0 pt-3">{reply.content}</div>
-                            <div className="reply pl-1">
-                            {!isReplying && (
-                                <button
-                                onClick={() => handleReplyClick(reply.discussion_id)}
-                                className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
-                                >
-                                <MessageSquare className="w-4 h-4" />
-                                <span>Reply</span>
-                                </button>
+                            <div className="pl-0 pt-3 pb-2">{reply.content}</div>
+                            <div className="reply pl-1 actions flex space-x-4">
+                            {!isReplying && !isUpdating && (
+                                <>
+                                    <button
+                                    onClick={() => handleReplyClick(reply.discussion_id)}
+                                    className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                    <MessageSquare className="w-4 h-4" />
+                                    <span>Reply</span>
+                                    </button>
+                                    {reply.content !== 'DELETED COMMENT' && (
+                                    <button
+                                        onClick={() => handleUpdateClick(reply.discussion_id)}
+                                        className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                        <span>Update</span>
+                                    </button>
+                                    )}
+                                    <button
+                                    onClick={(event) => {
+                                        event.stopPropagation(); // Stop event propagation
+                                        handleDeleteClick(reply.discussion_id);
+                                    }}
+                                    className="flex items-center space-x-2 text-black hover:bg-gray-200 text-sm"
+                                    >
+                                    <Trash className="w-4 h-4" />
+                                    <span>Delete</span>
+                                    </button>
+                                </>
                                 )}
                             {(replyingTo === reply.discussion_id) && (
                                 <ReplyForm
