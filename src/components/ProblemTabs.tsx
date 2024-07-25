@@ -48,7 +48,7 @@ const ProblemTabs: React.FC<TabContentProps> = ({problemId}) => {
         {tabs.map(tab => (
           <div key={tab.id} className={`${activeTab === tab.id ? '' : 'hidden'}`}>
             {tab.component}
-            {activeTab === 'Description' && tab.id === 'Description' && <RecommendedProblems />}
+            {activeTab === 'Description' && tab.id === 'Description' && <RecommendedProblems problemId={problemId}/>}
           </div>
         ))}
       </div>
