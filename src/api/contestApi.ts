@@ -26,22 +26,7 @@ export const fetchContests = async (): Promise<Contest[]> => {
       }
   
       const data = await response.json();
-      var res: Contest[] = [];
-        for(let i=0; i<data.length; i++) {
-          res.push({
-            id: data[i].contest_id,
-            title: data[i].title,
-            description: data[i].description,
-            start_time: data[i].start_time,
-            end_time: data[i].end_time,
-            created_by: data[i].created_by,
-            created_at: data[i].created_at,
-            winner: data[i].winner
-          });
-        }
-      console.log('Fetched contests data:', res);
-  
-      return res; 
+      return data; 
     } catch (error) {
       console.error('Fetch contests failed:', error);
       throw error;

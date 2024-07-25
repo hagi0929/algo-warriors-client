@@ -9,6 +9,8 @@ import { useContestProblems } from '../hooks/useContestProblems';
 import { useContestDescription } from '../hooks/useContestDescription';
 import { useContestParticipants } from '../hooks/useContestParticipants';
 import { ContestUser } from '../api/contestApi';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../components/ui/resizable';
+import ProblemCard from '../components/ProblemCard';
 
 interface Props { }
 
@@ -40,13 +42,13 @@ const ContestPage = (props: Props) => {
 
   return (
     <>
-      {/* <Navbar />
+      <Navbar />
       <ResizablePanelGroup
         className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm"
         direction="horizontal"
       >
         <ResizablePanel minSize={30} className="col-span-3">
-          <ProblemCard/>
+          <ProblemCard />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel minSize={30} className="col-span-2">
@@ -55,28 +57,10 @@ const ContestPage = (props: Props) => {
               {'Description'}
             </div>
           </Card>
-          <ContestDescr />
-          <ContestScores />
-        </ResizablePanel>
-      </ResizablePanelGroup> */}
-
-
-      <Navbar />
-
-      <div className="mt-1 grid grid-cols-5 gap-[0.625rem] md:gap-x-0.75 font-sm">
-        <div className="col-span-3">
-          <ContestProblemCard problems={problemsArray} />
-        </div>
-        <div className="col-span-2">
-          <Card className="bg-white rounded-lg overflow-hidden shadow-md">
-            <div className="flex-1 py-2 px-4 text-center text-lg font-bold">
-              {'Description'}
-            </div>
-          </Card>
           <ContestDescr description={descriptionInfo || ''} />
           <ContestScores scores={participantsArray} />
-        </div>
-      </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </>
   )
 }
