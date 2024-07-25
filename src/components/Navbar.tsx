@@ -43,7 +43,7 @@ const Navbar = (props: Props) => {
         </NavigationMenu.Item>
 
         <NavigationMenu.Item className='ml-auto bg-white'>
-            <Link to="/resources" className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white">
+            <Link to="/resources" className="mx-1 text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-2 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white">
               Resources
             </Link>
         </NavigationMenu.Item>
@@ -52,13 +52,13 @@ const Navbar = (props: Props) => {
           <a href="https://nextjs-yjs-monaco-vidhis-projects-5bb70a2b.vercel.app/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white">
+              className="mx-1 text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-2 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white">
               Collaborate
           </a>
         </NavigationMenu.Item>  
           
         <NavigationMenu.Item className='ml-auto bg-white'>
-          <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white ">
+          <NavigationMenu.Trigger className="mx-1 text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-2 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px] bg-white ">
             Documentation{' '}
             <CaretDownIcon
               className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180 bg-white"
