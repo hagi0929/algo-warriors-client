@@ -25,11 +25,11 @@ const SimpleProblemList: React.FC<SimpleProblemListProps> = ({ problems }) => {
             {problems.map(p => (
                 <TableRow
                     key={p.id}
-                    className="bg-accent hover:bg-hover-accent cursor-pointer"
+                    className="bg-white hover:bg-gray-100 cursor-pointer transition-colors duration-200"
                     onClick={() => handleNewProblem(p.id)}
                 >
                     <TableCell>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
+                        <div className="hidden text-sm text-gray-500 md:inline">
                             {p.id}
                         </div>
                     </TableCell>
