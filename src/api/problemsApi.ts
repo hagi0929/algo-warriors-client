@@ -1,7 +1,7 @@
 import { PagenationState } from '../models/Etc';
 import { AbstractProblem, Problem, ProblemFilterOptions, ProblemMinimal } from '../models/Problem';
 
-export const fetchProblems = async (): Promise<ProblemMinimal[]> => {
+export const fetchProblems = async (): Promise<Problem[]> => {
   try {
     const response = await fetch('http://127.0.0.1:3000/problem/list');
     if (!response.ok) {
@@ -18,7 +18,7 @@ export const fetchProblems = async (): Promise<ProblemMinimal[]> => {
 
     // Log the data to ensure it's correctly parsed
     console.log('Fetched problems:', data);
-    var res: ProblemMinimal[] = [];
+    var res: Problem[] = [];
     for (let i = 0; i < data.length; i++) {
       res.push({
         id: data[i].problem_id,

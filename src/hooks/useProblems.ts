@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchDashboardProblems, fetchProblemDescription } from '../api/problemsApi';
+import { fetchDashboardProblems, fetchProblemDescription, fetchProblems} from '../api/problemsApi';
 import { AbstractProblem, Problem, ProblemFilterOptions } from '../models/Problem';
 import { PagenationState } from '../models/Etc';
 
@@ -16,6 +16,12 @@ export const useProblems = (filters: ProblemFilterOptions | null, Pagenation: Pa
   });
 };
 
+export const getProblems = () => {
+  return useQuery<Problem[], Error>({
+    queryKey: ['problems'],
+    queryFn: () => fetchProblems(),
+  });
+}
 export const useProblemDescription = (id:string) => {
   return useQuery<Problem[], Error>({
     queryKey: ['problem_description'],

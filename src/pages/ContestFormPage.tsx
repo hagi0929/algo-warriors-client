@@ -2,8 +2,7 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { useProblems } from "../hooks/useProblems";
-import { start } from 'repl';
+import { getProblems } from "../hooks/useProblems";
 
 interface ContestFormInputs {
   title: string;
@@ -20,10 +19,10 @@ const ContestFormPage: React.FC = () => {
     }
   });
   const navigate = useNavigate();
-  const { data: problems, error, isLoading } = useProblems();
+  const { data: problems, error, isLoading } = getProblems();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading results: {error.message}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>Error loading results: {error.message}</div>;
   const problemsArray = Array.isArray(problems) ? problems : [];
 
   const onSubmit = async (data: ContestFormInputs) => {
