@@ -153,6 +153,7 @@ const ContestFormPage: React.FC = () => {
                     name="problems"
                     control={control}
                     defaultValue={[]}
+                    rules={{ required: 'At least one problem is required' }}
                     render={({ field }) => (
                     <input
                         type="checkbox"
