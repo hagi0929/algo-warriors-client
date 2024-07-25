@@ -15,7 +15,7 @@ import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRigh
 import PaginationComponent from "./Pagenation"
 import { useProblems } from "../hooks/useProblems"
 
-
+import { Route, Routes, useParams } from 'react-router-dom';
 
 import {
   Card,
@@ -52,16 +52,15 @@ const fetchTags = async (tagType: string | null): Promise<Tag[]> => {
 
 
 
-
-
 const ProblemCard: React.FC<ProblemCardProps> = () => {
+  const { contest_id } = useParams<{ contest_id: string }>() ?? null;
 
   const queryClient = useQueryClient()
   const [filters, setFilters] = useState<ProblemFilterOptions>({
     title: null,
     difficulty: null,
     categories: null,
-    contest_id: null,
+    contest_id: parseInt(contest_id ?? "") || null,
     sort_by: null,
   })
 

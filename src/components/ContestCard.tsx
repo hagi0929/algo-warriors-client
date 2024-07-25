@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import { fetchContests } from "../api/contestApi";
 import { Button } from "./ui/button";
 import { Plus } from 'lucide-react';
+import { useQuery } from "@tanstack/react-query";
 
 const ContestCard: React.FC = () => {
   const [personalContests, setPersonalContests] = useState<Contest[]>([]);
@@ -38,19 +39,16 @@ const ContestCard: React.FC = () => {
   const contestsPerPage = 10;
   const pageCount = Math.ceil(contests.length / contestsPerPage);
 
-  useEffect(() => {
-    const fetchAndSetContests = async () => {
-      try {
-        const data = await fetchContests();
-        setContests(data);
-        setPersonalContests(data.slice(0, 3));
-      } catch (err) {
-        console.error("Failed to fetch contests:", err);
-      }
-    };
+  const { data: contestData } = useQuery<Contest[], Error>({
+    queryKey: ['contests'],
+    queryFn: fetchContests,
+  });
 
-    fetchAndSetContests();
-  }, []);
+  useEffect(() => {
+    if (!contestData) return;
+    setContests(contestData);
+    setPersonalContests(contestData.slice(0, 3));
+  }, [contestData]);
 
   const currentContests = contests.slice(
     (currentPage - 1) * contestsPerPage,
@@ -113,8 +111,8 @@ const ContestCard: React.FC = () => {
               <Table>
                 <TableBody>
                   {personalContests.map((c) => (
-                    <TableRow key={c.id}>
-                      <Link to={`/contest/${c.id}`} className="flex w-full">
+                    <TableRow key={c.contest_id}>
+                      <Link to={`/contest/${c.contest_id}`} className="flex w-full">
                         <TableCell className="hidden sm:table-cell w-4/5">
                           <Badge className="text-xs" variant="secondary">
                             {c.title}
@@ -136,8 +134,8 @@ const ContestCard: React.FC = () => {
             </TableHeader>
             <TableBody>
               {currentContests.map((c) => (
-                <TableRow key={c.id} className="bg-accent hover:bg-hover-accent">
-                  <Link to={`/contest/${c.id}`} className="flex w-full">
+                <TableRow key={c.contest_id} className="bg-accent hover:bg-hover-accent">
+                  <Link to={`/contest/${c.contest_id}`} className="flex w-full">
                     <TableCell className="hidden sm:table-cell w-4/5">
                       <Badge className="text-xs" variant="secondary">
                         {c.title}

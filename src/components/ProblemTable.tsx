@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "../components/ui/table";
 import { useMemo, useState } from "react";
+import { Button } from "./ui/button";
 
 interface DataTableProps<AbstractProblem> {
   data: AbstractProblem[],
@@ -69,9 +70,7 @@ export function ProblemTable<AbstractProblem>({
         cell: ({ row }) => {
           return (
             <div className="flex space-x-2">
-              <Link to={`/problem/${row.getValue("problem_id")}`} className="flex w-full">
-                {row.getValue("title")}
-              </Link>
+              <Button variant={"link"} asChild><Link to={`/problem/${row.getValue("problem_id")}`} className="font-semibold">{row.getValue("title")}</Link></Button>
             </div>
           );
         },

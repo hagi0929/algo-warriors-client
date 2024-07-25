@@ -12,12 +12,6 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "../components/ui/resizable"
-import ContestProblemCard from "../components/ContestProblemCard";
-import { Card } from "../components/ui/card";
-import ContestDescr from "../components/ContestDescr";
-import { useContests } from "../hooks/useContests";
-import { AbstractProblem, ProblemFilterOptions } from "../models/Problem";
-import { Contest } from "../models/Contest"
 
 interface Props { }
 

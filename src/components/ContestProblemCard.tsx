@@ -25,13 +25,13 @@ import {
   PaginationPrevious,
 } from "./ui/pagination"
 import { Link } from 'react-router-dom';
-import { Problem } from "../models/Problem"
+import { AbstractProblem, Problem } from "../models/Problem"
 import { Tag } from "../models/Tag"
 import { fetchTags } from "../api/tagsApi"
 import TagDropdown from "./TagDropDown"
 
 interface ContestProblemCardProps {
-  problems: Problem[];
+  problems: AbstractProblem[];
 }
 
 const ContestProblemCard: React.FC<ContestProblemCardProps> = ({ problems }) => {
