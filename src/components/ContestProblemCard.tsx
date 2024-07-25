@@ -29,9 +29,11 @@ import { Problem } from "../models/Problem"
 import { Tag } from "../models/Tag"
 import { fetchTags } from "../api/tagsApi"
 import TagDropdown from "./TagDropDown"
+import { useContestProblems } from "../hooks/useContestProblems"
+import { ContestProblem } from "../models/Contest"
 
 interface ContestProblemCardProps {
-  problems: Problem[];
+  problems: ContestProblem[];
 }
 
 const ContestProblemCard: React.FC<ContestProblemCardProps> = ({ problems }) => {
@@ -41,7 +43,7 @@ const ContestProblemCard: React.FC<ContestProblemCardProps> = ({ problems }) => 
   const [curDifficulty, setCurDifficulty] = useState("");
   const [curCat, setCurCat] = useState("");
   const [curSource, setCurSource] = useState("");
-
+  
   useEffect(() => {
     fetchTags()
       .then((tags) => {
@@ -62,7 +64,7 @@ const ContestProblemCard: React.FC<ContestProblemCardProps> = ({ problems }) => 
             <CardDescription>Have a hand a this contest by attempting any of the problems below! You can be awarded points even if you don't solve the problem compeletely!</CardDescription>
         </CardHeader>
         <CardContent>
-        <TagDropdown
+        {/* <TagDropdown
             label="Difficulty"
             tags={difficulties}
             selectedValue={curDifficulty}
@@ -79,31 +81,25 @@ const ContestProblemCard: React.FC<ContestProblemCardProps> = ({ problems }) => 
             tags={sources}
             selectedValue={curSource}
             onChange={setCurSource}
-          />
-
+          /> */}
+            
             <Table>
             <TableHeader>
               <TableRow className="pt-6 flex space-around">
-                <TableHead></TableHead>
+                <TableHead>Problem</TableHead>
                 <TableHead className="hidden sm:table-cell">Title</TableHead>
-                <TableHead className="hidden sm:table-cell">Description</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
               {problems.map(p => (
-              <TableRow key={p.id} className="bg-accent hover:bg-hover-accent">
-                <Link to={`/problem/${p.id}`} className="flex w-full">
+              <TableRow key={p.problem_id} className="bg-accent hover:bg-hover-accent">
+                <Link to={`/problem/${p.problem_id}`} className="flex w-full">
                   <TableCell>
                     <div className="hidden text-sm text-muted-foreground md:inline">
-                      {p.id}
+                      {p.problem_id}
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">{p.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge className="text-xs" variant="secondary">
-                      {p.description}
-                    </Badge>
-                  </TableCell>
                 </Link>
               </TableRow>
             ))}

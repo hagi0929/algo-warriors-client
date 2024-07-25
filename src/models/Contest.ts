@@ -16,7 +16,8 @@ export interface ContestParticipant {
 
 export interface ContestProblem {
     problem_id: number;
-    contest_id: number;
+    title: string;
+    description: string;
 }
 
 export interface ContestProblemSubmission {
