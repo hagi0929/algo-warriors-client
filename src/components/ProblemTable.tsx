@@ -22,11 +22,31 @@ interface DataTableProps<AbstractProblem> {
   tagMap: Map<number, string>
 }
 
+const colorClasses = [
+  { bg: "bg-red-100", text: "text-red-800" },
+  { bg: "bg-green-100", text: "text-green-800" },
+  { bg: "bg-blue-100", text: "text-blue-800" },
+  { bg: "bg-yellow-100", text: "text-yellow-800" },
+  { bg: "bg-purple-100", text: "text-purple-800" },
+  { bg: "bg-pink-100", text: "text-pink-800" },
+  { bg: "bg-indigo-100", text: "text-indigo-800" },
+  { bg: "bg-teal-100", text: "text-teal-800" },
+];
+
+function getColorClass(category: string, categoryColorMap: Map<string, { bg: string, text: string }>) {
+  if (!categoryColorMap.has(category)) {
+    const color = colorClasses[categoryColorMap.size % colorClasses.length];
+    categoryColorMap.set(category, color);
+  }
+  return categoryColorMap.get(category);
+}
+
 export function ProblemTable<AbstractProblem>({
   data,
   tagMap,
 }: DataTableProps<AbstractProblem>) {
   const navigate = useNavigate();
+  const categoryColorMap = new Map<string, { bg: string, text: string }>();
 
   const columns = useMemo<ColumnDef<AbstractProblem, any>[]>(
     () => [
@@ -82,12 +102,20 @@ export function ProblemTable<AbstractProblem>({
         header: 'Categories',
         cell: ({ row }) => {
           const temp: string[] = row.getValue("categories") || [];
-          const categories = temp.map((catId) => tagMap.get(parseInt(catId)) || catId).join(", ");
+          const categories = temp.map((catId) => tagMap.get(parseInt(catId)) || catId);
           return (
-            <div className="flex space-x-2">
-              <span className="max-w-[500px] truncate font-medium">
-                {categories}
-              </span>
+            <div className="flex flex-wrap space-x-2">
+              {categories.map((category, index) => {
+                const colorClass = getColorClass(category, categoryColorMap);
+                return (
+                  <span
+                    key={index}
+                    className={`px-2 py-1 rounded-full text-sm font-medium ${colorClass?.bg} ${colorClass?.text} m-1`}
+                  >
+                    {category}
+                  </span>
+                );
+              })}
             </div>
           );
         },

@@ -20,7 +20,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./ui/pagination"
+} from "./ui/pagination";
 
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Terminal } from "lucide-react";
@@ -30,7 +30,6 @@ import { useEffect, useState } from "react";
 import { fetchContests } from "../api/contestApi";
 import { Button } from "./ui/button";
 import { Plus } from 'lucide-react';
-  
 
 const ContestCard: React.FC = () => {
   const [personalContests, setPersonalContests] = useState<Contest[]>([]);
@@ -95,11 +94,11 @@ const ContestCard: React.FC = () => {
           <CardTitle className="flex">
             <div className="title w-3/4">Contests</div>
             <div className="create-contest text-base w-1/4">
-            <Link to={`/add-contest`}>
-              <Button className="bg-slate-300 text-black">
-                Create Contest
-              </Button>
-            </Link>
+              <Link to={`/add-contest`}>
+                <Button className="bg-slate-300 text-black">
+                  Create Contest
+                </Button>
+              </Link>
             </div>
           </CardTitle>
           <CardDescription>
@@ -150,7 +149,7 @@ const ContestCard: React.FC = () => {
                           event.stopPropagation();
                           console.log("Register button clicked");
                         }}
-                        className="bg-slate-500 text-white"
+                        className="bg-blue-500 text-white"
                       >
                         Register
                       </Button>

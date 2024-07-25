@@ -36,7 +36,7 @@ const ProblemTabTest: React.FC<ProblemTabTestProps> = () => {
                 
             </div>
             <p className="text-gray-700">
-                This is a placeholder for our test cases.
+            You will see test results when you submit your code.
             </p>
         </div>
     );
