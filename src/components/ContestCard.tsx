@@ -30,17 +30,13 @@ import {
 } from "./ui/alert"
 import { Terminal } from "lucide-react"
 import { Link } from 'react-router-dom';
+import { Contest } from "../models/Contest"
   
 
 interface ContestCardProps {
   contests: Contest[];
 }
 
-interface Contest {
-    id: number;
-    title: string;
-    description: string;
-  }
 
 const ContestCard: React.FC<ContestCardProps> = ({ contests }) => {
     return (

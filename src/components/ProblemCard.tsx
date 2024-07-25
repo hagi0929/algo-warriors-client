@@ -1,138 +1,98 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 // import { Button } from './components/ui/button';
+import { PagenationState } from "../models/Etc"
 
 import { Badge } from "./ui/badge"
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "./ui/pagination"
-import { Link } from 'react-router-dom';
-import { Button } from "./ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
 import { ProblemTable } from "./ProblemTable"
-import { ColumnDef } from "@tanstack/react-table"
+import { AbstractProblem, ProblemFilterOptions } from "../models/Problem"
 
 interface ProblemCardProps {
-  problems: Problem[];
 }
 
-interface Problem {
-  problem_id: number;
-  title: string;
-  difficulty: string;
-  tags: string[];
-}
 
 interface DropDownForm {
   value: string;
   label: string;
 }
 
-const difficulties: DropDownForm[] = [
-  {
-    value: "hard",
-    label: "Hard",
-  },
-  {
-    value: "medium",
-    label: "Medium",
-  },
-  {
-    value: "easy",
-    label: "Easy",
-  },
-]
 
-const types: DropDownForm[] = [
-  {
-    value: "string",
-    label: "String",
-  },
-  {
-    value: "binary_search",
-    label: "Binary Search",
-  },
-  {
-    value: "regex",
-    label: "Regex",
-  },
-  {
-    value: "trie",
-    label: "Trie",
-  },
-]
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Tag } from "../models/Tags"
+import { ProblemTableFilter } from "./ProblemTableFilter"
+import { Input } from "./ui/input"
+import { on } from "events"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { Button } from "./ui/button"
+import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons"
+import PaginationComponent from "./Pagenation"
+import { useProblems } from "../hooks/useProblems"
 
 
-// define interfave for filter
-interface ProblemFilterOptions {
-  title: string | null;
-  difficulty: string | null;
-  categories: string[] | null;
-  contestId: number | null;
-  sortBy: string | null;
-}
+const fetchTags = async (tagType: string | null): Promise<Tag[]> => {
+  const queryParams = new URLSearchParams();
+
+  if (tagType) queryParams.append('tag_type', tagType);
+
+  const response = await fetch(`http://127.0.0.1:3000/tag/list?${queryParams.toString()}`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 
-const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
-  const [posDifficulty, setPosDifficulty] = useState(difficulties[0].value)
-  const [curDifficulty, setCurDifficulty] = useState("")
+const ProblemCard: React.FC<ProblemCardProps> = () => {
 
-  const [posType, setPosType] = useState(types[0].value)
-  const [curType, setCurType] = useState("")
+  const queryClient = useQueryClient()
   const [filters, setFilters] = useState<ProblemFilterOptions>({
     title: null,
     difficulty: null,
     categories: null,
-    contestId: null,
-    sortBy: null,
+    contest_id: null,
+    sort_by: null,
   })
-  const handleDifficultyChange = (value: string) => {
-    setPosDifficulty(value);
-    setCurDifficulty(value);
-  };
 
-  const handleTypeChange = (value: string) => {
-    setPosType(value);
-    setCurType(value);
-  };
+  const [pagenationState, setPagenationState] = useState<PagenationState>({
+    pageIndex: 1,
+    pageSize: 20
+  })
 
-  const curDifficultyLabel = curDifficulty != ""
-    ? difficulties.find(difficulty => difficulty.value === curDifficulty)?.label
-    : 'Difficulty';
+  const [tagMap, setTagMap] = useState<Map<number, string>>(new Map());
 
-  const curTypeLabel = curType != ""
-    ? types.find(type => type.value === curType)?.label
-    : 'Category';
+  const { data: problems, isLoading: problemsLoading } = useProblems(filters, pagenationState) || { data: [], isLoading: true };
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery<Tag[], Error>(
+    {
+      queryKey: ['allCategories'],
+      queryFn: () => fetchTags("subcategory"),
+    }
+  );
+  const { data: difficultyData, isLoading: difficultyLoading } = useQuery<Tag[], Error>(
+    {
+      queryKey: ['allDifficulties'],
+      queryFn: () => fetchTags("difficulty"),
+    }
+  );
 
+  useEffect(() => {
+    if (categoriesData && difficultyData) {
+      const allTags = [...categoriesData, ...difficultyData];
+      const map = new Map<number, string>();
 
+      allTags.forEach(tag => {
+        map.set(tag.tag_id, tag.content);
+      });
+
+      setTagMap(map);
+    }
+  }, [difficultyData, categoriesData]);
   return (
     <>
       <Card className="problem-card">
@@ -141,64 +101,45 @@ const ProblemCard: React.FC<ProblemCardProps> = ({ problems }) => {
           <CardDescription>Try attempting a problem to better your coding skills!</CardDescription>
         </CardHeader>
         <CardContent>
-    
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                {curDifficultyLabel}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Available Difficulties</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={posDifficulty} onValueChange={handleDifficultyChange}>
-                {difficulties.map(d => (
-                  <DropdownMenuRadioItem key={d.value} value={d.value}>
-                    {d.label}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex flex-1 items-center space-x-2">
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                {curTypeLabel}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={posType} onValueChange={handleTypeChange}>
-                {types.map(d => (
-                  <DropdownMenuRadioItem key={d.value} value={d.value}>
-                    {d.label}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <Input
+              placeholder="Search by Title"
+              value={undefined}
+              onChange={(event) =>
+                setFilters({ ...filters, title: event.target.value })
+              }
+              className="h-8 w-[150px] lg:w-[250px]"
+            />
 
-          <ProblemTable data={problems} />
+            <ProblemTableFilter filter={filters.categories || []} title="Categories"
+              options={
+                categoriesData?.map(d => ({
+                  label: d.content,
+                  value: d.tag_id.toString(),
+                })) || []
+              }
+              onSelectedChange={function (newSelected: any): void {
+                setFilters({ ...filters, categories: newSelected });
+              }} />
+            <ProblemTableFilter filter={filters.difficulty || []} title="Difficulty"
+              options={
+                difficultyData?.map(d => ({
+                  label: d.content,
+                  value: d.tag_id.toString(),
+                })) || []
+              }
+              onSelectedChange={function (newSelected: any): void {
+                setFilters({ ...filters, difficulty: newSelected });
+              }} />
+          </div>
+
+          <ProblemTable data={problems} tagMap={tagMap}/>
+          <PaginationComponent pagenationState={pagenationState} onPagenationStateChange={setPagenationState} />
         </CardContent>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+
       </Card>
+
     </>
   )
 }

@@ -1,11 +1,11 @@
-"use client"
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 import {
   Table,
@@ -16,45 +16,78 @@ import {
   TableRow,
 } from "../components/ui/table"
 import { useMemo, useState } from "react"
-import { Problem } from "../models/Problem"
 
-interface DataTableProps<Problem> {
-  data: Problem[]
+interface DataTableProps<AbstractProblem> {
+  data: AbstractProblem[],
+  tagMap: Map<number, string>
 }
 
-export function ProblemTable<Problem>({
+export function ProblemTable<AbstractProblem>({
   data,
-}: DataTableProps<Problem>) {
+  tagMap,
+}: DataTableProps<AbstractProblem>) {
+  const navigate = useNavigate();
 
-  const columns = useMemo<ColumnDef<Problem, any>[]>(
+  const columns = useMemo<ColumnDef<AbstractProblem, any>[]>(
     () => [
       {
-        accessorKey: 'ID',
-        cell: info => info.getValue()
-      },
-      {
-        accessorKey: 'Title',
-        header: () => <span>Visits</span>,
-        meta: {
-          filterVariant: 'range',
+        accessorKey: "problem_id",
+        header: "ID",
+        cell: ({ row }) => {
+          return (
+            <div className="flex space-x-2">
+              <span className="max-w-[500px] truncate font-medium">
+                {row.getValue("problem_id")}
+              </span>
+            </div>
+          );
         },
       },
       {
-        accessorKey: 'Difficulty',
-        header: 'Status',
-        meta: {
-          filterVariant: 'select',
+        accessorKey: "title",
+        header: "Title",
+        cell: ({ row }) => {
+          return (
+            <div className="flex space-x-2">
+              <Link to={`/problem/${row.getValue("problem_id")}`} className="flex w-full">
+                {row.getValue("title")}
+              </Link>
+            </div>
+          );
         },
       },
       {
-        accessorKey: 'Tags',
-        meta: {
-          filterVariant: 'range',
+        accessorKey: "difficulty",
+        header: "Difficulty",
+        cell: ({ row }) => {
+          const difficultyKey = parseInt(row.getValue("difficulty"));
+          const difficultyLabel = tagMap.get(difficultyKey) || "Unknown";
+          return (
+            <div className="flex space-x-2">
+              <span className="max-w-[500px] truncate font-medium">
+                {difficultyLabel}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'categories',
+        cell: ({ row }) => {
+          const temp: string[] = row.getValue("categories") || [];
+          const categories = temp.map((catId) => tagMap.get(parseInt(catId)) || catId).join(", ");
+          return (
+            <div className="flex space-x-2">
+              <span className="max-w-[500px] truncate font-medium">
+                {categories}
+              </span>
+            </div>
+          );
         },
       },
     ],
-    []
-  )
+    [tagMap]
+  );
 
   const table = useReactTable({
     data,
@@ -91,12 +124,13 @@ export function ProblemTable<Problem>({
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+          {tagMap.size > 0 && table.getRowModel().rows?.length ? (
+            table.getRowModel().rows?.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                className="bg-accent hover:bg-hover-accent"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
