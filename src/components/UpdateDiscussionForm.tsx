@@ -26,6 +26,7 @@ const UpdateDiscussionForm: React.FC<UpdateDiscussionFormProps> = ({ discussion,
           onChange={(e) => setUpdateText(e.target.value)}
           rows={4}
           placeholder={defaultContent}
+          required
           className="w-full p-2 border border-gray-300 rounded-md text-sm focus:border-black focus:outline-none"
         />
         <div className="flex ">

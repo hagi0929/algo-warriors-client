@@ -139,7 +139,7 @@ const DiscussionItem: React.FC<DiscussionProps> = ({ discussion, discussions : i
                     {getReplies(discussions, reply.discussion_id).length > 0 ? (
                         <Accordion type="multiple">
                         <AccordionItem value={String(reply.discussion_id)}>
-                            <AccordionTrigger className='pb-2'>{reply.content}</AccordionTrigger>
+                            <AccordionTrigger className='pb-2 text-sm text-left'>{reply.content}</AccordionTrigger>
                             <div className="reply pl-1 actions flex space-x-4">
                             {!isReplying && !isUpdating && (
                                 <>

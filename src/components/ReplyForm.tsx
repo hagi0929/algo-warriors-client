@@ -25,6 +25,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ discussion, onSubmit, onCancel })
           value={replyText}
           onChange={(e) => setReplyText(e.target.value)}
           rows={4}
+          required
           placeholder="Type your reply..."
           className="w-full p-2 border border-gray-300 rounded-md text-sm focus:border-black focus:outline-none"
         />
