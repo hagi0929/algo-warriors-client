@@ -12,8 +12,7 @@ const ProblemTabDescr: React.FC<ProblemTabDescrProps> = ({ problemId }) => {
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
             <h2 className="text-xl font-bold mb-4">What is this problem about?</h2>
-            <p className="text-gray-700">
-                {/* You can replace the placeholder text with actual content based on the problemId */}
+            <p className="text-gray-700 whitespace-pre-wrap">
                 {`${description}`}
                 
             </p>
