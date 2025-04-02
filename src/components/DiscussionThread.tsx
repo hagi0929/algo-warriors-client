@@ -72,17 +72,6 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
       .catch(err => setError(err.message));
   };
 
-  const deleteDiscussionContent = (discussionId: number) => {
-    deleteDiscussion(discussionId)
-      .then(() => {
-        // const updatedDiscussions = discussions.map(d => 
-        //   d.discussion_id === discussionId ? { ...d, content: 'Deleted Discussion' } : d
-        // );
-        // setDiscussions(updatedDiscussions);
-      })
-      .catch(err => setError(err.message));
-  };  
-
   const handleDeleteClick = () => {
     deleteDiscussion(mainDiscussion.discussion_id);
   };
@@ -96,7 +85,7 @@ const DiscussionThread: React.FC<DiscussionProps> = ({ mainDiscussion }) => {
     setIsUpdating(!isUpdating);
   };
 
-  const handleReplySubmit = (replyText: string, parentId: number, problemId: number) => {
+  const handleReplySubmit = (replyText: string, problemId: number) => {
     addDiscussion(replyText, mainDiscussion.discussion_id, problemId);
     setIsReplying(false);
   };

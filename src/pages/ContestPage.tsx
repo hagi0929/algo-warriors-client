@@ -9,15 +9,13 @@ import { ContestUser } from '../api/contestApi';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../components/ui/resizable';
 import ProblemCard from '../components/ProblemCard';
 
-interface Props { }
-
-const ContestPage = (props: Props) => {
+const ContestPage = () => {
   const { contest_id } = useParams<{ contest_id: string }>();
   const contestIdNumber = Number(contest_id);
 
-  const { data: descriptionInfo, error: descriptionError, isLoading: descriptionLoading } = useContestDescription(contestIdNumber);
+  const { data: descriptionInfo } = useContestDescription(contestIdNumber);
 
-  const { data: participants, error: participantsError, isLoading: participantsLoading } = useContestParticipants(contestIdNumber);
+  const { data: participants } = useContestParticipants(contestIdNumber);
 
   const participantsArray: ContestUser[] = Array.isArray(participants) ? participants : [];
 

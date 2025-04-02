@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { CaretDownIcon } from '@radix-ui/react-icons';
-import HoverCardDemo from './HoverCard';
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Identity, SessionStatus } from '../models/User';
+import { SessionStatus } from '../models/User';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
 import { Button } from './ui/button';
 import { useUserProfile } from '../hooks/useUser';
@@ -36,11 +35,10 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
   )
 );
 
-interface Props { }
-const Navbar = (props: Props) => {
+const Navbar = () => {
   const queryClient = useQueryClient()
 
-  const { data: identity, isLoading: isIdentityLoading } = useUserProfile();
+  const { data: identity } = useUserProfile();
 
   useEffect(() => {
     if (identity?.status == SessionStatus.UNKNOWN) {
@@ -139,7 +137,7 @@ const Navbar = (props: Props) => {
                         <div className="flex items-center pt-2">
                           <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
                           <span className="text-xs text-muted-foreground">
-                            Joined {identity.data?.created_at}
+                            Joined {identity.data?.created_at?.toString()}
                           </span>
                         </div>
 

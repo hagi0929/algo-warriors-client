@@ -1,41 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Badge } from "./ui/badge";
 // import { Button } from './components/ui/button';
 import { PagenationState } from "../models/Etc"
 
 
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Tag } from "../models/Tags"
 import { ProblemTableFilter } from "./ProblemTableFilter"
 import { Input } from "./ui/input"
-import { on } from "events"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Button } from "./ui/button"
-import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons"
 import PaginationComponent from "./Pagenation"
 import { useProblems } from "../hooks/useProblems"
 
-import { Route, Routes, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Link } from "react-router-dom";
-import TagDropdown from "./TagDropDown";
 import { ProblemTable } from "./ProblemTable"
-import { AbstractProblem, ProblemFilterOptions } from "../models/Problem"
+import { ProblemFilterOptions } from "../models/Problem"
 
 interface ProblemCardProps {
-}
-
-interface Problem {
-  id: number;
-  title: string;
 }
 
 const fetchTags = async (tagType: string | null): Promise<Tag[]> => {
@@ -55,7 +42,6 @@ const fetchTags = async (tagType: string | null): Promise<Tag[]> => {
 const ProblemCard: React.FC<ProblemCardProps> = () => {
   const { contest_id } = useParams<{ contest_id: string }>() ?? null;
 
-  const queryClient = useQueryClient()
   const [filters, setFilters] = useState<ProblemFilterOptions>({
     title: null,
     difficulty: null,
@@ -71,14 +57,14 @@ const ProblemCard: React.FC<ProblemCardProps> = () => {
 
   const [tagMap, setTagMap] = useState<Map<number, string>>(new Map());
 
-  const { data: problems, isLoading: problemsLoading } = useProblems(filters, pagenationState) || { data: [], isLoading: true };
-  const { data: categoriesData, isLoading: categoriesLoading } = useQuery<Tag[], Error>(
+  const { data: problems } = useProblems(filters, pagenationState) || { data: [], isLoading: true };
+  const { data: categoriesData } = useQuery<Tag[], Error>(
     {
       queryKey: ['allCategories'],
       queryFn: () => fetchTags("subcategory"),
     }
   );
-  const { data: difficultyData, isLoading: difficultyLoading } = useQuery<Tag[], Error>(
+  const { data: difficultyData } = useQuery<Tag[], Error>(
     {
       queryKey: ['allDifficulties'],
       queryFn: () => fetchTags("difficulty"),
@@ -138,7 +124,7 @@ const ProblemCard: React.FC<ProblemCardProps> = () => {
               }} />
           </div>
 
-          <ProblemTable data={problems} tagMap={tagMap} />
+          <ProblemTable data={problems || []} tagMap={tagMap} />
           <PaginationComponent pagenationState={pagenationState} onPagenationStateChange={setPagenationState} />
         </CardContent>
 

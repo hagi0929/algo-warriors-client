@@ -5,9 +5,6 @@ import ProblemTabTest from './ProblemTabTest';
 import ProblemTabDiscuss from './ProblemTabDiscuss';
 import RecommendedProblems from './RecommendedProblems';
 
-interface Props {
-  problemId: string;
-}
 
 interface TabContentProps {
     problemId: number;

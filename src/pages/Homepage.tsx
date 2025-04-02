@@ -1,11 +1,8 @@
 // import{React}
 // import { Button } from './components/ui/button';
 
-import { useQueryClient } from "@tanstack/react-query";
 import ContestCard from "../components/ContestCard";
 import ProblemCard from "../components/ProblemCard";
-import { useProblems } from "../hooks/useProblems";
-import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import {
     ResizableHandle,
@@ -13,10 +10,7 @@ import {
     ResizablePanelGroup,
 } from "../components/ui/resizable"
 
-interface Props { }
-
-
-const HomePage = (props: Props) => {
+const HomePage = () => {
 
     return (
         <>

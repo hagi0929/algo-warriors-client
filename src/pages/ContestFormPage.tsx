@@ -19,7 +19,7 @@ const ContestFormPage: React.FC = () => {
     }
   });
   const navigate = useNavigate();
-  const { data: problems, error, isLoading } = getProblems();
+  const { data: problems } = getProblems();
 
   // if (isLoading) return <div>Loading...</div>;
   // if (error) return <div>Error loading results: {error.message}</div>;
@@ -154,7 +154,7 @@ const ContestFormPage: React.FC = () => {
                     control={control}
                     defaultValue={[]}
                     rules={{ required: 'At least one problem is required' }}
-                    render={({ field }) => (
+                    render={() => (
                     <input
                         type="checkbox"
                         value={problem.id}

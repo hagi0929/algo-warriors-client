@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import logo from '../images/algowarrior_logo.jpeg';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Button } from '../components/ui/button';
 
@@ -91,7 +90,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           <button type="submit" className="w-full bg-slate-500 text-white py-2 rounded-md">
-            {loginMutation.isLoading ? 'Logging in...' : 'Login'}
+            {loginMutation ? 'Logging in...' : 'Login'}
           </button>
           {/* <Link to="/home" className="w-full bg-slate-500 text-white py-2 rounded-md text-center block">
             Login

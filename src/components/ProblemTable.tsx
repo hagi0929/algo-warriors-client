@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
 import {
@@ -46,7 +45,6 @@ export function ProblemTable<AbstractProblem>({
   data,
   tagMap,
 }: DataTableProps<AbstractProblem>) {
-  const navigate = useNavigate();
   const categoryColorMap = new Map<string, { bg: string, text: string }>();
 
   const columns = useMemo<ColumnDef<AbstractProblem, any>[]>(

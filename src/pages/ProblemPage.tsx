@@ -1,15 +1,11 @@
-import React from 'react'
 import { useParams } from 'react-router-dom'
 import CodeEditor from '../components/CodeEditor'
 import ProblemTabs from '../components/ProblemTabs'
 import Navbar from '../components/Navbar';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../components/ui/resizable';
 
-interface Props {
 
-}
-
-const ProblemPage = (props: Props) => {
+const ProblemPage = () => {
   const { problem_id } = useParams<{ problem_id: string }>();
   return (
     <>
